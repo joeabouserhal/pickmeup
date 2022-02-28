@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pickmeup/login_email_screen.dart';
+import 'package:pickmeup/pages/login_email_screen.dart';
 import 'package:pickmeup/widgets/sign_in_button.dart';
 import 'package:pickmeup/widgets/sign_in_social_button.dart';
 

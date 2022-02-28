@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'login_screen.dart';
+import 'package:pickmeup/pages/login_screen.dart';
 
 void main(List<String> args) {
   runApp(const MyApp());
