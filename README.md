@@ -3,6 +3,6 @@
 Group 12 Senior Project
 
 ## Participants:
--Joe Abou Serhal
--Mohamad Yassine
--Hadi El-Hajj
+- Joe Abou Serhal
+- Mohamad Yassine
+- Hadi El-Hajj
