@@ -35,13 +35,6 @@ class LoginScreen extends StatelessWidget {
               imageAssetName: 'images/google-logo.png',
               onPressed: _signInWithGoogle),
           const SizedBox(height: 15),
-          /*SocialSignInButton(
-                    text: "Sign in with Facebook",
-                    color: const Color(0xFF334D92),
-                    textColor: Colors.white,
-                    imageAssetName: 'images/facebook-logo.png',
-                    onPressed: _signInWithFacebook),
-                const SizedBox(height: 15),*/
           SignInButton(
               text: "Sign in with Email",
               color: Theme.of(context).primaryColor,
