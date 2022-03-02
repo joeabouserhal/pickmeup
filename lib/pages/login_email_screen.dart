@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'dart:async';
 import 'package:mysql1/mysql1.dart';
 
 import 'package:pickmeup/widgets/sign_in_button.dart';

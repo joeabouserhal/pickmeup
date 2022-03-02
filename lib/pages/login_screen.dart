@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pickmeup/pages/login_email_screen.dart';
+import 'package:pickmeup/pages/main_screen.dart';
 import 'package:pickmeup/widgets/sign_in_button.dart';
 import 'package:pickmeup/widgets/sign_in_social_button.dart';
 
@@ -51,7 +52,13 @@ class LoginScreen extends StatelessWidget {
               text: 'Sign in as Guest',
               color: Colors.blueGrey,
               textColor: Colors.white,
-              onPressed: _signInAsGuest),
+              onPressed: () {
+                _signInAsGuest();
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const MainScreen()),
+                );
+              }),
           const Padding(
             padding: EdgeInsets.all(20.0),
             child: Text(
