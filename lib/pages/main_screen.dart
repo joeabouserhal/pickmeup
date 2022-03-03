@@ -1,9 +1,10 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:provider/provider.dart';
+
+import '../blocs/application_bloc.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
@@ -26,6 +27,11 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
+    //final applicationBloc = Provider.of<ApplicationBloc>(context);
+    // var _initialCameraPosition = CameraPosition(
+    //     target: LatLng(applicationBloc.currentLocation.latitude,
+    //         applicationBloc.currentLocation.longitude),
+    //     zoom: 7.5);
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
@@ -58,6 +64,7 @@ class _MainScreenState extends State<MainScreen> {
           ]),
         ),
         body: GoogleMap(
+          myLocationEnabled: true,
           initialCameraPosition: _initialCameraPosition,
           myLocationButtonEnabled: false,
           zoomControlsEnabled: false,
