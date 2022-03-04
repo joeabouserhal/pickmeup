@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'package:pickmeup/blocs/application_bloc.dart';
 import 'package:pickmeup/pages/login_screen.dart';
-import 'package:provider/provider.dart';
 
 void main(List<String> args) async {
   runApp(const MyApp());
