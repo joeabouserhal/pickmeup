@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:mysql1/mysql1.dart';
 
 import 'package:pickmeup/blocs/application_bloc.dart';
 import 'package:pickmeup/pages/login_screen.dart';
