@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:pickmeup/models/locations.dart';
-import 'package:provider/provider.dart';
-import '../blocs/application_bloc.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
@@ -27,24 +25,23 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    //final applicationBloc = Provider.of<ApplicationBloc>(context);
-    // var _initialCameraPosition = CameraPosition(
-    //     target: LatLng(applicationBloc.currentLocation.latitude,
-    //         applicationBloc.currentLocation.longitude),
-    //     zoom: 7.5);
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
         appBar: AppBar(
-          systemOverlayStyle: SystemUiOverlayStyle.light,
+          systemOverlayStyle:
+              const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
           foregroundColor: Colors.white,
           automaticallyImplyLeading: false,
           centerTitle: true,
-          title: const Text('Pick Me Up',
-              style: TextStyle(
-                  fontFamily: "Roboto",
-                  fontSize: 22,
-                  fontWeight: FontWeight.w400)),
+          title: Text('Pick Me Up',
+              style: GoogleFonts.ptSans(
+                  fontSize: 25,
+                  fontWeight: FontWeight.w300,
+                  letterSpacing: 0,
+                  shadows: <Shadow>[
+                    const Shadow(color: Colors.black26, blurRadius: 5)
+                  ])),
           elevation: 0,
           leading: Builder(builder: (BuildContext context) {
             return IconButton(
@@ -64,7 +61,6 @@ class _MainScreenState extends State<MainScreen> {
           ]),
         ),
         body: GoogleMap(
-          myLocationEnabled: true,
           initialCameraPosition: _initialCameraPosition,
           myLocationButtonEnabled: false,
           zoomControlsEnabled: false,
