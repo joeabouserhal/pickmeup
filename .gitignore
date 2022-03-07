@@ -9,6 +9,9 @@
 .history
 .svn/
 
+# ignore vscode workspace
+pickmeup.code-workspace
+
 # IntelliJ related
 *.iml
 *.ipr
