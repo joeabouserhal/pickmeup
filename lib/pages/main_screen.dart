@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
@@ -12,6 +14,8 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
+  final TextEditingController _textFieldController = TextEditingController();
+
   //Google Maps Data
   late GoogleMapController _googleMapController;
   final _initialCameraPosition =
@@ -22,6 +26,10 @@ class _MainScreenState extends State<MainScreen> {
     _googleMapController.dispose();
     super.dispose();
   }
+
+  //input info data
+  String _rideLocation = '';
+  String _rideDestination = '';
 
   @override
   Widget build(BuildContext context) {
@@ -80,16 +88,144 @@ class _MainScreenState extends State<MainScreen> {
                 foregroundColor: Colors.white,
                 backgroundColor: Theme.of(context).primaryColor,
                 label: 'Delivery',
-                onTap: () {}),
+                onTap: () {
+                  _displayDeliveryOrder(context);
+                }),
             SpeedDialChild(
                 child: const Icon(Icons.local_taxi_rounded),
                 foregroundColor: Colors.white,
                 backgroundColor: Theme.of(context).primaryColor,
                 label: 'Ride',
-                onTap: () {}),
+                onTap: () {
+                  _displayRideOrder(context);
+                }),
           ],
         ),
       ),
     );
+  }
+
+  // Ride Order Screen
+  Future<void> _displayRideOrder(BuildContext context) async {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+            child: AlertDialog(
+              shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(14.0))),
+              title: Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).primaryColor,
+                    borderRadius: const BorderRadius.all(Radius.circular(14.0)),
+                  ),
+                  child: const Text(
+                    'Order a Ride',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: Colors.white),
+                  )),
+              content: Column(mainAxisSize: MainAxisSize.min, children: [
+                TextField(
+                  onChanged: (value) {
+                    _rideLocation = value;
+                  },
+                  controller: _textFieldController,
+                  decoration: const InputDecoration(hintText: "Your Location"),
+                ),
+                TextField(
+                  onChanged: (value) {
+                    _rideDestination = value;
+                  },
+                  controller: _textFieldController,
+                  decoration:
+                      const InputDecoration(hintText: "Your Destination"),
+                ),
+              ]),
+              actions: <Widget>[
+                TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: const Text(
+                      'Cancel',
+                      style: TextStyle(color: Colors.red),
+                    )),
+                TextButton(
+                    onPressed: () {
+                      setState(() {
+                        _textFieldController.clear();
+                        Navigator.pop(context);
+                      });
+                    },
+                    child: const Text('Add')),
+              ],
+            ),
+          );
+        });
+  }
+
+  //Delivery Order Screen
+  Future<void> _displayDeliveryOrder(BuildContext context) async {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+            child: AlertDialog(
+              shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(14.0))),
+              title: Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                      borderRadius:
+                          const BorderRadius.all(Radius.circular(14.0)),
+                      color: Theme.of(context).primaryColor),
+                  child: const Text(
+                    'Order a Delivery',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: Colors.white),
+                  )),
+              content: Column(mainAxisSize: MainAxisSize.min, children: [
+                TextField(
+                  onChanged: (value) {
+                    _rideLocation = value;
+                  },
+                  controller: _textFieldController,
+                  decoration: const InputDecoration(hintText: "Your Location"),
+                ),
+                TextField(
+                  minLines: 4,
+                  maxLines: 6,
+                  onChanged: (value) {
+                    _rideDestination = value;
+                  },
+                  controller: _textFieldController,
+                  decoration:
+                      const InputDecoration(hintText: "Your Description"),
+                ),
+              ]),
+              actions: <Widget>[
+                TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: const Text(
+                      'Cancel',
+                      style: TextStyle(color: Colors.red),
+                    )),
+                TextButton(
+                    onPressed: () {
+                      setState(() {
+                        _textFieldController.clear();
+                        Navigator.pop(context);
+                      });
+                    },
+                    child: const Text('Add')),
+              ],
+            ),
+          );
+        });
   }
 }

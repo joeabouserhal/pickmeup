@@ -1,9 +1,7 @@
 import 'dart:convert';
-
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class Location extends State {
+class Location {
   List _cities = [];
 
 // Fetch content from the json file
@@ -11,18 +9,10 @@ class Location extends State {
     final String response =
         await rootBundle.loadString('assets/lebanese_cities.json');
     final data = await json.decode(response);
-    setState(() {
-      _cities = data["Location_Name_En"] + " " + data["Location_Name_Ar"];
-    });
+    _cities = data["Location_Name_En"] + " " + data["Location_Name_Ar"];
   }
 
   List getCities() {
     return _cities;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    throw UnimplementedError();
   }
 }
