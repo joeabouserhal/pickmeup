@@ -1,18 +1,25 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/services.dart';
 
-class Location {
-  List _cities = [];
+class Locations {
+  var location;
+
+  Locations({required this.location});
+  static Locations? fromJson(Map<String, dynamic> json) {
+    try {
+      Locations(location: json['Location_Name_En']);
+    } on Exception catch (e) {
+      print(e);
+    }
+  }
 
 // Fetch content from the json file
-  Future<void> readJson() async {
+  static Future<Iterable<Locations?>> getCities() async {
     final String response =
         await rootBundle.loadString('assets/lebanese_cities.json');
     final data = await json.decode(response);
-    _cities = data["Location_Name_En"] + " " + data["Location_Name_Ar"];
-  }
-
-  List getCities() {
-    return _cities;
+    return data.map<Locations>((json) => Locations.fromJson(json));
+    //return data["Location_Name_En"] + " " + data["Location_Name_Ar"];
   }
 }
