@@ -14,7 +14,8 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  final TextEditingController _textFieldController = TextEditingController();
+  final TextEditingController _textFieldController1 = TextEditingController();
+  final TextEditingController _textFieldController2 = TextEditingController();
 
   //Google Maps Data
   late GoogleMapController _googleMapController;
@@ -131,14 +132,14 @@ class _MainScreenState extends State<MainScreen> {
                   onChanged: (value) {
                     _rideLocation = value;
                   },
-                  controller: _textFieldController,
+                  controller: _textFieldController1,
                   decoration: const InputDecoration(hintText: "Your Location"),
                 ),
                 TextField(
                   onChanged: (value) {
                     _rideDestination = value;
                   },
-                  controller: _textFieldController,
+                  controller: _textFieldController2,
                   decoration:
                       const InputDecoration(hintText: "Your Destination"),
                 ),
@@ -155,7 +156,8 @@ class _MainScreenState extends State<MainScreen> {
                 TextButton(
                     onPressed: () {
                       setState(() {
-                        _textFieldController.clear();
+                        _textFieldController1.clear();
+                        _textFieldController2.clear();
                         Navigator.pop(context);
                       });
                     },
@@ -192,7 +194,7 @@ class _MainScreenState extends State<MainScreen> {
                   onChanged: (value) {
                     _rideLocation = value;
                   },
-                  controller: _textFieldController,
+                  controller: _textFieldController1,
                   decoration: const InputDecoration(hintText: "Your Location"),
                 ),
                 TextField(
@@ -201,7 +203,7 @@ class _MainScreenState extends State<MainScreen> {
                   onChanged: (value) {
                     _rideDestination = value;
                   },
-                  controller: _textFieldController,
+                  controller: _textFieldController2,
                   decoration:
                       const InputDecoration(hintText: "Your Description"),
                 ),
@@ -218,7 +220,8 @@ class _MainScreenState extends State<MainScreen> {
                 TextButton(
                     onPressed: () {
                       setState(() {
-                        _textFieldController.clear();
+                        _textFieldController1.clear();
+                        _textFieldController2.clear();
                         Navigator.pop(context);
                       });
                     },
