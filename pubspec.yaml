@@ -71,4 +71,4 @@ flutter:
     - images/facebook-logo.png
     - images/google-logo.png
     - images/app-icon.png
-    - assets/lebanese_cities.json
+    - assets/locations.txt

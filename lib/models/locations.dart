@@ -1,25 +1,39 @@
-import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/services.dart';
 
-class Locations {
-  var location;
+class Location {
+  int latitude;
 
-  Locations({required this.location});
-  static Locations? fromJson(Map<String, dynamic> json) {
-    try {
-      Locations(location: json['Location_Name_En']);
-    } on Exception catch (e) {
-      print(e);
-    }
+  int longitude;
+
+  String name;
+
+  Location(
+      {required this.latitude, required this.longitude, required this.name});
+
+  factory Location.fromJson(Map<String, dynamic> json) {
+    return Location(
+      latitude: json['latitude'],
+      longitude: json['longitude'],
+      name: json['name'],
+    );
   }
 
-// Fetch content from the json file
-  static Future<Iterable<Locations?>> getCities() async {
-    final String response =
-        await rootBundle.loadString('assets/lebanese_cities.json');
-    final data = await json.decode(response);
-    return data.map<Locations>((json) => Locations.fromJson(json));
-    //return data["Location_Name_En"] + " " + data["Location_Name_Ar"];
+  Future<String> loadAsset() async {
+    return await rootBundle.loadString('assets/my_text.txt');
+  }
+
+  late String NESTED_JSON;
+  setState() {
+    NESTED_JSON = loadAsset() as String;
+  }
+
+  Future<List<Location>> getLocations() async {
+    return await Future.delayed(const Duration(seconds: 2), () {
+      List<dynamic> data = json.decode(NESTED_JSON);
+      List<Location> locations =
+          data.map((data) => Location.fromJson(data)).toList();
+      return locations;
+    });
   }
 }
