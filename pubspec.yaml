@@ -44,6 +44,8 @@ dependencies:
   flutter_native_splash: ^2.0.5
   fluttertoast: ^8.0.9
   flutter_typeahead: ^3.2.4
+  json_serializable: ^6.1.5
+  build_runner: ^2.1.7
 
 dev_dependencies:
   flutter_test:
@@ -72,3 +74,4 @@ flutter:
     - images/google-logo.png
     - images/app-icon.png
     - assets/locations.txt
+    - assets/locations.json

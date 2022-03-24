@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
@@ -190,13 +191,15 @@ class _MainScreenState extends State<MainScreen> {
                     style: TextStyle(color: Colors.white),
                   )),
               content: Column(mainAxisSize: MainAxisSize.min, children: [
-                TextField(
-                  onChanged: (value) {
-                    _rideLocation = value;
-                  },
-                  controller: _textFieldController1,
-                  decoration: const InputDecoration(hintText: "Your Location"),
-                ),
+                // TypeAheadField<Location?>(suggestionsCallback: (pattern) async {
+                //   return await Location().getLocations(pattern);
+                // }, itemBuilder: (context, Location? suggestion) {
+                //   final location = suggestion as Location;
+                //   return ListTile(title: Text(location.name));
+                // }, onSuggestionSelected: (Location? suggestion) {
+                //   final location = suggestion as Location;
+                //   _textFieldController1.text = location.name;
+                // }),
                 TextField(
                   minLines: 4,
                   maxLines: 6,
