@@ -1,5 +1,4 @@
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
@@ -106,7 +105,7 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
-  // Ride Order Screen
+  // Ride Order Screen Pop Up Screen
   Future<void> _displayRideOrder(BuildContext context) async {
     return showDialog(
         context: context,
@@ -145,6 +144,7 @@ class _MainScreenState extends State<MainScreen> {
                 ),
               ]),
               actions: <Widget>[
+                // Cancel Button
                 TextButton(
                     onPressed: () {
                       Navigator.pop(context);
@@ -168,7 +168,7 @@ class _MainScreenState extends State<MainScreen> {
         });
   }
 
-  //Delivery Order Screen
+  //Delivery Order Screen Pop Up Screen
   Future<void> _displayDeliveryOrder(BuildContext context) async {
     return showDialog(
         context: context,
@@ -190,15 +190,7 @@ class _MainScreenState extends State<MainScreen> {
                     style: TextStyle(color: Colors.white),
                   )),
               content: Column(mainAxisSize: MainAxisSize.min, children: [
-                // TypeAheadField<Location?>(suggestionsCallback: (pattern) async {
-                //   return await Location().getLocations(pattern);
-                // }, itemBuilder: (context, Location? suggestion) {
-                //   final location = suggestion as Location;
-                //   return ListTile(title: Text(location.name));
-                // }, onSuggestionSelected: (Location? suggestion) {
-                //   final location = suggestion as Location;
-                //   _textFieldController1.text = location.name;
-                // }),
+                // Missing Location Text Field
                 TextField(
                   minLines: 4,
                   maxLines: 6,
@@ -211,6 +203,7 @@ class _MainScreenState extends State<MainScreen> {
                 ),
               ]),
               actions: <Widget>[
+                // Cancel Button
                 TextButton(
                     onPressed: () {
                       Navigator.pop(context);
@@ -219,6 +212,7 @@ class _MainScreenState extends State<MainScreen> {
                       'Cancel',
                       style: TextStyle(color: Colors.red),
                     )),
+                // Submit button
                 TextButton(
                     onPressed: () {
                       setState(() {
