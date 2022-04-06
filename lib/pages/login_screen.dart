@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:pickmeup/pages/login_email_screen.dart';
 import 'package:pickmeup/pages/main_screen.dart';
 import 'package:pickmeup/widgets/sign_in_button.dart';
-import 'package:pickmeup/widgets/sign_in_social_button.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -29,13 +28,6 @@ class LoginScreen extends StatelessWidget {
               ),
             ),
           ),
-          SocialSignInButton(
-              text: "Sign in with Google",
-              color: Colors.white,
-              textColor: Colors.black87,
-              imageAssetName: 'images/google-logo.png',
-              onPressed: _signInWithGoogle),
-          const SizedBox(height: 15),
           SignInButton(
               text: "Sign in with Email",
               color: Theme.of(context).primaryColor,
@@ -74,14 +66,6 @@ class LoginScreen extends StatelessWidget {
         ],
       )),
     );
-  }
-
-  void _signInWithGoogle() {
-    print('sign in with google');
-  }
-
-  void _signInWithFacebook() {
-    print('sign in with facebook');
   }
 
   void _signInAsGuest() {
