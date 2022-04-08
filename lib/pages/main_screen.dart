@@ -2,8 +2,6 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
@@ -15,17 +13,6 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   final TextEditingController _textFieldController1 = TextEditingController();
   final TextEditingController _textFieldController2 = TextEditingController();
-
-  //Google Maps Data
-  late GoogleMapController _googleMapController;
-  final _initialCameraPosition =
-      const CameraPosition(target: LatLng(33.895970, 35.846559), zoom: 8.5);
-
-  @override
-  void dispose() {
-    _googleMapController.dispose();
-    super.dispose();
-  }
 
   //input info data
   String _rideLocation = '';
@@ -42,14 +29,9 @@ class _MainScreenState extends State<MainScreen> {
           foregroundColor: Colors.white,
           automaticallyImplyLeading: false,
           centerTitle: true,
-          title: Text('Pick Me Up',
-              style: GoogleFonts.ptSans(
-                  fontSize: 25,
-                  fontWeight: FontWeight.w300,
-                  letterSpacing: 0,
-                  shadows: <Shadow>[
-                    const Shadow(color: Colors.black26, blurRadius: 5)
-                  ])),
+          title: Text(
+            'Pick Me Up',
+          ),
           elevation: 0,
           leading: Builder(builder: (BuildContext context) {
             return IconButton(
@@ -68,12 +50,7 @@ class _MainScreenState extends State<MainScreen> {
             ),
           ]),
         ),
-        body: GoogleMap(
-          initialCameraPosition: _initialCameraPosition,
-          myLocationButtonEnabled: false,
-          zoomControlsEnabled: false,
-          onMapCreated: (controller) => _googleMapController = controller,
-        ),
+        body: SizedBox(),
         floatingActionButton: SpeedDial(
           label: const Text("Order"),
           spacing: 6,
