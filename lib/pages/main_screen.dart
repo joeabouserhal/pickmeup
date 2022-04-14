@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
 class MainScreen extends StatefulWidget {
@@ -14,9 +15,20 @@ class _MainScreenState extends State<MainScreen> {
   final TextEditingController _textFieldController1 = TextEditingController();
   final TextEditingController _textFieldController2 = TextEditingController();
 
+  // OSM Map controller
+  MapController mapController = MapController(
+    initMapWithUserPosition: true,
+    // center to lebanon by default
+    initPosition: GeoPoint(latitude: 33.8547, longitude: 35.8623),
+  );
+
+  void dispose() {
+    mapController.dispose();
+  }
+
   //input info data
-  String _rideLocation = '';
-  String _rideDestination = '';
+  late String _rideLocation = '';
+  late String _rideDestination = '';
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +41,7 @@ class _MainScreenState extends State<MainScreen> {
           foregroundColor: Colors.white,
           automaticallyImplyLeading: false,
           centerTitle: true,
-          title: Text(
+          title: const Text(
             'Pick Me Up',
           ),
           elevation: 0,
@@ -50,7 +62,24 @@ class _MainScreenState extends State<MainScreen> {
             ),
           ]),
         ),
-        body: SizedBox(),
+        //* The Map
+        body: OSMFlutter(
+          controller: mapController,
+          trackMyPosition: false,
+          // for testing purpose
+          androidHotReloadSupport: true,
+          initZoom: 15,
+          stepZoom: 1.0,
+          userLocationMarker: UserLocationMaker(
+            personMarker: const MarkerIcon(
+              icon: Icon(Icons.location_history_rounded,
+                  color: Colors.red, size: 48),
+            ),
+            directionArrowMarker: const MarkerIcon(
+              icon: Icon(Icons.double_arrow_rounded),
+            ),
+          ),
+        ),
         floatingActionButton: SpeedDial(
           label: const Text("Order"),
           spacing: 6,
@@ -66,7 +95,7 @@ class _MainScreenState extends State<MainScreen> {
                 backgroundColor: Theme.of(context).primaryColor,
                 label: 'Delivery',
                 onTap: () {
-                  _displayDeliveryOrder(context);
+                  //route to page
                 }),
             SpeedDialChild(
                 child: const Icon(Icons.local_taxi_rounded),
@@ -74,134 +103,11 @@ class _MainScreenState extends State<MainScreen> {
                 backgroundColor: Theme.of(context).primaryColor,
                 label: 'Ride',
                 onTap: () {
-                  _displayRideOrder(context);
+                  // route to page
                 }),
           ],
         ),
       ),
     );
-  }
-
-  // Ride Order Screen Pop Up Screen
-  Future<void> _displayRideOrder(BuildContext context) async {
-    return showDialog(
-        context: context,
-        builder: (context) {
-          return BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-            child: AlertDialog(
-              shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(14.0))),
-              title: Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).primaryColor,
-                    borderRadius: const BorderRadius.all(Radius.circular(14.0)),
-                  ),
-                  child: const Text(
-                    'Order a Ride',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.white),
-                  )),
-              content: Column(mainAxisSize: MainAxisSize.min, children: [
-                TextField(
-                  onChanged: (value) {
-                    _rideLocation = value;
-                  },
-                  controller: _textFieldController1,
-                  decoration: const InputDecoration(hintText: "Your Location"),
-                ),
-                TextField(
-                  onChanged: (value) {
-                    _rideDestination = value;
-                  },
-                  controller: _textFieldController2,
-                  decoration:
-                      const InputDecoration(hintText: "Your Destination"),
-                ),
-              ]),
-              actions: <Widget>[
-                // Cancel Button
-                TextButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: const Text(
-                      'Cancel',
-                      style: TextStyle(color: Colors.red),
-                    )),
-                TextButton(
-                    onPressed: () {
-                      setState(() {
-                        _textFieldController1.clear();
-                        _textFieldController2.clear();
-                        Navigator.pop(context);
-                      });
-                    },
-                    child: const Text('Add')),
-              ],
-            ),
-          );
-        });
-  }
-
-  //Delivery Order Screen Pop Up Screen
-  Future<void> _displayDeliveryOrder(BuildContext context) async {
-    return showDialog(
-        context: context,
-        builder: (context) {
-          return BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-            child: AlertDialog(
-              shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(14.0))),
-              title: Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                      borderRadius:
-                          const BorderRadius.all(Radius.circular(14.0)),
-                      color: Theme.of(context).primaryColor),
-                  child: const Text(
-                    'Order a Delivery',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.white),
-                  )),
-              content: Column(mainAxisSize: MainAxisSize.min, children: [
-                // Missing Location Text Field
-                TextField(
-                  minLines: 4,
-                  maxLines: 6,
-                  onChanged: (value) {
-                    _rideDestination = value;
-                  },
-                  controller: _textFieldController2,
-                  decoration:
-                      const InputDecoration(hintText: "Your Description"),
-                ),
-              ]),
-              actions: <Widget>[
-                // Cancel Button
-                TextButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: const Text(
-                      'Cancel',
-                      style: TextStyle(color: Colors.red),
-                    )),
-                // Submit button
-                TextButton(
-                    onPressed: () {
-                      setState(() {
-                        _textFieldController1.clear();
-                        _textFieldController2.clear();
-                        Navigator.pop(context);
-                      });
-                    },
-                    child: const Text('Add')),
-              ],
-            ),
-          );
-        });
   }
 }

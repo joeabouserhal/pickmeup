@@ -41,6 +41,7 @@ dependencies:
   flutter_native_splash: ^2.0.5
   fluttertoast: ^8.0.9
   build_runner: ^2.1.7
+  flutter_osm_plugin: ^0.33.0+2
 
 dev_dependencies:
   flutter_test:
