@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:mysql1/mysql1.dart';
+import 'package:flutter/services.dart';
 
 import 'package:pickmeup/widgets/sign_in_button.dart';
 
-// initialize the database
+bool _isObscure = true;
 
 class LoginEmailScreen extends StatefulWidget {
   const LoginEmailScreen({Key? key}) : super(key: key);
@@ -17,6 +17,9 @@ class _LoginEmailScreenState extends State<LoginEmailScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        systemOverlayStyle: const SystemUiOverlayStyle(
+            statusBarColor: Colors.transparent,
+            statusBarIconBrightness: Brightness.dark),
         backgroundColor: Colors.grey[200],
         foregroundColor: Colors.black87,
         elevation: 0,
@@ -64,11 +67,21 @@ class _LoginEmailScreenState extends State<LoginEmailScreen> {
                   borderRadius: BorderRadius.circular(10),
                   color: Colors.white,
                 ),
-                child: const TextField(
+                child: TextField(
                   keyboardType: TextInputType.visiblePassword,
+                  obscureText: _isObscure,
                   decoration: InputDecoration(
                     border: InputBorder.none,
-                    prefixIcon: Icon(Icons.lock),
+                    prefixIcon: const Icon(Icons.lock),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                          _isObscure ? Icons.visibility : Icons.visibility_off),
+                      onPressed: () {
+                        setState(() {
+                          _isObscure = !_isObscure;
+                        });
+                      },
+                    ),
                     hintText: 'Password',
                   ),
                 ),

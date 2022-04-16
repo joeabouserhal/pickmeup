@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
@@ -36,8 +35,9 @@ class _MainScreenState extends State<MainScreen> {
       onWillPop: () async => false,
       child: Scaffold(
         appBar: AppBar(
-          systemOverlayStyle:
-              const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
+          systemOverlayStyle: const SystemUiOverlayStyle(
+              statusBarColor: Colors.transparent,
+              statusBarIconBrightness: Brightness.light),
           foregroundColor: Colors.white,
           automaticallyImplyLeading: false,
           centerTitle: true,
