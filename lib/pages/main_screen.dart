@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:pickmeup/pages/location_picker_screen.dart';
+import 'package:pickmeup/widgets/common_elevated_button.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
@@ -65,7 +67,7 @@ class _MainScreenState extends State<MainScreen> {
         //* The Map
         body: OSMFlutter(
           controller: mapController,
-          trackMyPosition: false,
+          trackMyPosition: true,
           // for testing purpose
           androidHotReloadSupport: true,
           initZoom: 15,
@@ -73,7 +75,7 @@ class _MainScreenState extends State<MainScreen> {
           userLocationMarker: UserLocationMaker(
             personMarker: const MarkerIcon(
               icon: Icon(Icons.location_history_rounded,
-                  color: Colors.red, size: 48),
+                  color: Colors.blue, size: 60),
             ),
             directionArrowMarker: const MarkerIcon(
               icon: Icon(Icons.double_arrow_rounded),
@@ -95,7 +97,7 @@ class _MainScreenState extends State<MainScreen> {
                 backgroundColor: Theme.of(context).primaryColor,
                 label: 'Delivery',
                 onTap: () {
-                  //route to page
+                  _openLocationPickerSheet('Delivery');
                 }),
             SpeedDialChild(
                 child: const Icon(Icons.local_taxi_rounded),
@@ -103,11 +105,77 @@ class _MainScreenState extends State<MainScreen> {
                 backgroundColor: Theme.of(context).primaryColor,
                 label: 'Ride',
                 onTap: () {
-                  // route to page
+                  _openLocationPickerSheet('Ride');
                 }),
           ],
         ),
       ),
     );
   }
+
+  void _openLocationPickerSheet(option) {
+    showModalBottomSheet(
+        backgroundColor: Colors.transparent,
+        context: context,
+        builder: (context) {
+          return Container(
+              decoration: const BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(20),
+                      topRight: Radius.circular(20))),
+              child: (option == 'Delivery')
+                  //if true
+                  ? _deliveryLocationPicker(context)
+                  // if false
+                  : _rideLocationPicker(context));
+        });
+  }
+}
+
+_rideLocationPicker(context) {
+  return Padding(
+    padding: const EdgeInsets.all(15.0),
+    child: Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        CustomElevatedButton(
+          child: const Text("Pick Current Location"),
+          onPressed: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) {
+              return LocationPickerScreen(option: 'Current Location');
+            }));
+          },
+        ),
+        const Padding(padding: EdgeInsets.all(5)),
+        CustomElevatedButton(
+          child: const Text("Pick Destination"),
+          onPressed: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) {
+              return LocationPickerScreen(option: 'Destination');
+            }));
+          },
+        )
+      ],
+    ),
+  );
+}
+
+_deliveryLocationPicker(context) {
+  return Padding(
+    padding: const EdgeInsets.all(15.0),
+    child: Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        CustomElevatedButton(
+          child: const Text("Pick Current Location"),
+          onPressed: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) {
+              return LocationPickerScreen(option: 'Current Location');
+            }));
+          },
+        )
+      ],
+    ),
+  );
 }
