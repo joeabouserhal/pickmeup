@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:pickmeup/pages/forgot_password_screen.dart';
 
 import 'package:pickmeup/widgets/sign_in_button.dart';
 
@@ -31,7 +32,7 @@ class _LoginEmailScreenState extends State<LoginEmailScreen> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             const Padding(
-              padding: EdgeInsets.fromLTRB(25, 50, 0, 40),
+              padding: EdgeInsets.fromLTRB(25, 100, 0, 40),
               child: Text(
                 'Sign in with\nEmail',
                 style: TextStyle(
@@ -86,6 +87,21 @@ class _LoginEmailScreenState extends State<LoginEmailScreen> {
                   ),
                 ),
               ),
+            ),
+            const SizedBox(height: 20),
+            GestureDetector(
+              child: Center(
+                child: Text(
+                  "Forgot my password",
+                  style: TextStyle(
+                      decoration: TextDecoration.underline,
+                      color: Theme.of(context).primaryColor),
+                ),
+              ),
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => const ForgotPasswordScreen()));
+              },
             ),
             const SizedBox(height: 60),
             SignInButton(
