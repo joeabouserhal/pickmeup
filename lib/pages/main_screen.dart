@@ -13,23 +13,12 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  final TextEditingController _textFieldController1 = TextEditingController();
-  final TextEditingController _textFieldController2 = TextEditingController();
-
   // OSM Map controller
   MapController mapController = MapController(
     initMapWithUserPosition: true,
     // center to lebanon by default
     initPosition: GeoPoint(latitude: 33.8547, longitude: 35.8623),
   );
-
-  void dispose() {
-    mapController.dispose();
-  }
-
-  //input info data
-  late String _rideLocation = '';
-  late String _rideDestination = '';
 
   @override
   Widget build(BuildContext context) {
