@@ -3,6 +3,8 @@ import 'package:flutter/services.dart';
 
 import '../widgets/sign_in_button.dart';
 
+bool _isObscure = true;
+
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({Key? key}) : super(key: key);
 
@@ -11,6 +13,13 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
+  final GlobalKey<FormState> _key = GlobalKey<FormState>();
+  final _emailTextController = TextEditingController();
+  final _firstNameTextController = TextEditingController();
+  final _lastNameTextController = TextEditingController();
+  final _passwordTextController = TextEditingController();
+  final _passwordConfirmTextController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,128 +33,194 @@ class _SignUpScreenState extends State<SignUpScreen> {
         ),
         backgroundColor: Colors.grey[200],
         body: SingleChildScrollView(
-          child: Center(
-              child: Column(
-            // main axis is vertically
-            mainAxisAlignment: MainAxisAlignment.center,
-            // cross axis is horizontally
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const Padding(
-                padding: EdgeInsets.fromLTRB(25, 100, 0, 40),
-                child: Text(
-                  'Sign Up',
-                  style: TextStyle(
-                    fontSize: 40,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
+          child: Form(
+            key: _key,
+            child: Center(
+                child: Column(
+              // main axis is vertically
+              mainAxisAlignment: MainAxisAlignment.center,
+              // cross axis is horizontally
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const Padding(
+                  padding: EdgeInsets.fromLTRB(25, 100, 0, 40),
+                  child: Text(
+                    'Sign Up',
+                    style: TextStyle(
+                      fontSize: 40,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
                   ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                child: Row(children: [
-                  Flexible(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.white,
-                      ),
-                      child: const TextField(
-                        keyboardType: TextInputType.emailAddress,
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          prefixIcon: Icon(Icons.person),
-                          hintText: 'First Name',
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                  child: Row(children: [
+                    Flexible(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.white,
+                        ),
+                        child: TextFormField(
+                          controller: _firstNameTextController,
+                          keyboardType: TextInputType.emailAddress,
+                          decoration: const InputDecoration(
+                            border: InputBorder.none,
+                            prefixIcon: Icon(Icons.person),
+                            hintText: 'First Name',
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return '  Field is required.';
+                            }
+                            return null;
+                          },
                         ),
                       ),
                     ),
-                  ),
-                  const SizedBox(width: 15),
-                  Flexible(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.white,
-                      ),
-                      child: const TextField(
-                        keyboardType: TextInputType.emailAddress,
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          prefixIcon: Icon(Icons.person),
-                          hintText: 'Last Name',
+                    const SizedBox(width: 15),
+                    Flexible(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.white,
+                        ),
+                        child: TextFormField(
+                          controller: _lastNameTextController,
+                          keyboardType: TextInputType.emailAddress,
+                          decoration: const InputDecoration(
+                            border: InputBorder.none,
+                            prefixIcon: Icon(Icons.person),
+                            hintText: 'Last Name',
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return '  Field is required.';
+                            }
+                            return null;
+                          },
                         ),
                       ),
                     ),
-                  ),
-                ]),
-              ),
-              const SizedBox(height: 15),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Colors.white,
-                  ),
-                  child: const TextField(
-                    keyboardType: TextInputType.emailAddress,
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      prefixIcon: Icon(Icons.email),
-                      hintText: 'Email',
+                  ]),
+                ),
+                const SizedBox(height: 15),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.white,
+                    ),
+                    child: TextFormField(
+                      controller: _emailTextController,
+                      keyboardType: TextInputType.emailAddress,
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        prefixIcon: Icon(Icons.email),
+                        hintText: 'Email',
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return '  Please enter your email';
+                        }
+                        if (!RegExp(r'\w+@\w+\.\w+').hasMatch(value)) {
+                          return '  Invalid Email Address';
+                        }
+                        return null;
+                      },
                     ),
                   ),
                 ),
-              ),
-              const SizedBox(height: 15),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Colors.white,
-                  ),
-                  child: const TextField(
-                    keyboardType: TextInputType.visiblePassword,
-                    obscureText: true,
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      prefixIcon: Icon(Icons.lock),
-                      hintText: 'Password',
+                const SizedBox(height: 15),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.white,
+                    ),
+                    child: TextFormField(
+                      controller: _passwordTextController,
+                      keyboardType: TextInputType.visiblePassword,
+                      obscureText: _isObscure,
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        prefixIcon: const Icon(Icons.lock),
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _isObscure
+                                ? Icons.visibility
+                                : Icons.visibility_off,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _isObscure = !_isObscure;
+                            });
+                          },
+                        ),
+                        hintText: 'Password',
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return '  Please enter your password';
+                        }
+                        if (!RegExp(
+                                r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~-]).{8,}$')
+                            .hasMatch(value)) {
+                          return '  Invalid Password, must contain:\n  * at least 1 capital letter\n  * at least 1 lowercase letter\n  * at least 1 number\n  * at least 1 special character\n  * at least 8 characters long';
+                        }
+                        return null;
+                      },
                     ),
                   ),
                 ),
-              ),
-              const SizedBox(height: 15),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Colors.white,
-                  ),
-                  child: const TextField(
-                    keyboardType: TextInputType.visiblePassword,
-                    obscureText: true,
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      prefixIcon: Icon(Icons.lock),
-                      hintText: 'Re-enter Password',
+                const SizedBox(height: 15),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.white,
+                    ),
+                    child: TextFormField(
+                      controller: _passwordConfirmTextController,
+                      keyboardType: TextInputType.visiblePassword,
+                      obscureText: true,
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        prefixIcon: Icon(Icons.lock),
+                        hintText: 'Re-enter Password',
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return '  Please re-enter your password';
+                        }
+                        if (value != _passwordTextController.text) {
+                          return '  Passwords do not match';
+                        }
+                        return null;
+                      },
                     ),
                   ),
                 ),
-              ),
-              const SizedBox(height: 60),
-              SignInButton(
-                  text: 'Sign Up',
-                  color: Theme.of(context).primaryColor,
-                  textColor: Colors.white,
-                  onPressed: _signInWithEmail),
-            ],
-          )),
+                const SizedBox(height: 60),
+                SignInButton(
+                    text: 'Sign Up',
+                    color: Theme.of(context).primaryColor,
+                    textColor: Colors.white,
+                    onPressed: () {
+                      if (_key.currentState!.validate()) {
+                        _key.currentState!.save();
+                        _signUpWithEmail();
+                      }
+                    }),
+              ],
+            )),
+          ),
         ));
   }
 
-  void _signInWithEmail() {}
+  void _signUpWithEmail() {}
 }
