@@ -72,7 +72,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           ),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return '  Field is required.';
+                              return '  Field is required';
                             }
                             return null;
                           },
@@ -96,7 +96,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           ),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return '  Field is required.';
+                              return '  Field is required';
                             }
                             return null;
                           },
