@@ -13,12 +13,15 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
+  // global key used for form validation
   final GlobalKey<FormState> _key = GlobalKey<FormState>();
+  // text editor controllers
   final _emailTextController = TextEditingController();
   final _firstNameTextController = TextEditingController();
   final _lastNameTextController = TextEditingController();
   final _passwordTextController = TextEditingController();
   final _passwordConfirmTextController = TextEditingController();
+  final _phoneNumberTextController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -104,6 +107,34 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                     ),
                   ]),
+                ),
+                const SizedBox(height: 15),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.white,
+                    ),
+                    child: TextFormField(
+                      controller: _phoneNumberTextController,
+                      keyboardType: TextInputType.emailAddress,
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        prefixIcon: Icon(Icons.phone),
+                        hintText: 'Phone Number (+961)',
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return '  Please enter your Phone Number';
+                        }
+                        if (!RegExp(r'[0-9]{8}').hasMatch(value)) {
+                          return '  Invalid Phone Number';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
                 ),
                 const SizedBox(height: 15),
                 Padding(
