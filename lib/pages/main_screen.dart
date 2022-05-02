@@ -35,7 +35,7 @@ class _MainScreenState extends State<MainScreen> {
           title: const Text(
             'Pick Me Up',
           ),
-          elevation: 0,
+          elevation: 3,
           leading: Builder(builder: (BuildContext context) {
             return IconButton(
               icon: const Icon(Icons.menu),
@@ -71,33 +71,49 @@ class _MainScreenState extends State<MainScreen> {
             ),
           ),
         ),
-        floatingActionButton: SpeedDial(
-          label: const Text("Order"),
-          spacing: 6,
-          spaceBetweenChildren: 6,
-          overlayColor: Colors.black,
-          overlayOpacity: 0,
-          foregroundColor: Colors.white,
-          animatedIcon: AnimatedIcons.menu_close,
-          children: [
-            SpeedDialChild(
-                child: const Icon(Icons.delivery_dining_rounded),
-                foregroundColor: Colors.white,
-                backgroundColor: Theme.of(context).primaryColor,
-                label: 'Delivery',
-                onTap: () {
-                  _openLocationPickerSheet('Delivery');
-                }),
-            SpeedDialChild(
-                child: const Icon(Icons.local_taxi_rounded),
-                foregroundColor: Colors.white,
-                backgroundColor: Theme.of(context).primaryColor,
-                label: 'Ride',
-                onTap: () {
-                  _openLocationPickerSheet('Ride');
-                }),
-          ],
-        ),
+        floatingActionButton:
+            Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              elevation: 3,
+              shape: const CircleBorder(),
+              padding: const EdgeInsets.all(15), // <-- Splash color
+            ),
+            child: const Icon(Icons.location_searching, color: Colors.white),
+            onPressed: _returnToCurrentLocation,
+          ),
+          const SizedBox(width: 10),
+          SpeedDial(
+            elevation: 3,
+            label: const Text("Order"),
+            spacing: 6,
+            spaceBetweenChildren: 6,
+            overlayColor: Colors.black,
+            overlayOpacity: 0,
+            foregroundColor: Colors.white,
+            animatedIcon: AnimatedIcons.menu_close,
+            children: [
+              SpeedDialChild(
+                  elevation: 3,
+                  child: const Icon(Icons.delivery_dining_rounded),
+                  foregroundColor: Colors.white,
+                  backgroundColor: Theme.of(context).primaryColor,
+                  label: 'Delivery',
+                  onTap: () {
+                    _openLocationPickerSheet('Delivery');
+                  }),
+              SpeedDialChild(
+                  elevation: 3,
+                  child: const Icon(Icons.local_taxi_rounded),
+                  foregroundColor: Colors.white,
+                  backgroundColor: Theme.of(context).primaryColor,
+                  label: 'Ride',
+                  onTap: () {
+                    _openLocationPickerSheet('Ride');
+                  }),
+            ],
+          ),
+        ]),
       ),
     );
   }
@@ -119,6 +135,12 @@ class _MainScreenState extends State<MainScreen> {
                   // if false
                   : _rideLocationPicker(context));
         });
+  }
+
+  // returns camera to original location
+  void _returnToCurrentLocation() async {
+    await mapController.currentLocation();
+    await mapController.setZoom(zoomLevel: 15);
   }
 }
 
