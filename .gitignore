@@ -9,7 +9,8 @@
 .history
 .svn/
 
-# ignore vscode workspace
+# vscode
+/.vscode
 pickmeup.code-workspace
 
 # IntelliJ related
