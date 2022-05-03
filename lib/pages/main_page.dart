@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:pickmeup/pages/about_us.dart';
+import 'package:pickmeup/pages/contact_us.dart';
 import 'package:pickmeup/pages/location_picker_screen.dart';
+import 'package:pickmeup/pages/login_screen.dart';
 import 'package:pickmeup/widgets/common_elevated_button.dart';
 
 class MainScreen extends StatefulWidget {
@@ -33,7 +36,7 @@ class _MainScreenState extends State<MainScreen> {
           automaticallyImplyLeading: false,
           centerTitle: true,
           title: const Text(
-            'Pick Me Up',
+            "Pick Me Up",
           ),
           elevation: 3,
           leading: Builder(builder: (BuildContext context) {
@@ -50,6 +53,35 @@ class _MainScreenState extends State<MainScreen> {
             DrawerHeader(
               decoration: BoxDecoration(color: Theme.of(context).primaryColor),
               child: const Center(child: Text('Account Name')),
+            ),
+            ListTile(
+              title: Text("Contact Us"),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const ContactUsPage()),
+                );
+              },
+            ),
+            ListTile(
+              title: const Text("About Us"),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const AboutUsPage()),
+                );
+              },
+            ),
+            ListTile(
+              title: const Text("Log Out"),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const LoginScreen()),
+                );
+              },
             ),
           ]),
         ),

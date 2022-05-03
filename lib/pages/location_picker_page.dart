@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
@@ -5,9 +7,9 @@ import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
 PickerMapController _pickerMapController = PickerMapController();
 
 class LocationPickerScreen extends StatelessWidget {
-  LocationPickerScreen({required this.option});
+  LocationPickerScreen({Key? key, required this.option}) : super(key: key);
 
-  String option;
+  late String option;
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +26,7 @@ class LocationPickerScreen extends StatelessWidget {
           automaticallyImplyLeading: false,
           centerTitle: true,
           title: Text(
-            'Choose $option',
+            "'Choose $option'",
           ),
           elevation: 0,
         ),

@@ -15,6 +15,7 @@ class LoginScreen extends StatelessWidget {
         systemOverlayStyle: const SystemUiOverlayStyle(
             statusBarColor: Colors.transparent,
             statusBarIconBrightness: Brightness.dark),
+        automaticallyImplyLeading: false,
         backgroundColor: Colors.grey[200],
         elevation: 0,
       ),
