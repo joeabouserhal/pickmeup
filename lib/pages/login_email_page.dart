@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:pickmeup/pages/forgot_password_screen.dart';
+import 'package:pickmeup/pages/forgot_password_page.dart';
 
 import 'package:pickmeup/widgets/sign_in_button.dart';
 
 bool _isObscure = true;
 
-class LoginEmailScreen extends StatefulWidget {
-  const LoginEmailScreen({Key? key}) : super(key: key);
+class LoginEmailPage extends StatefulWidget {
+  const LoginEmailPage({Key? key}) : super(key: key);
 
   @override
-  _LoginEmailScreenState createState() => _LoginEmailScreenState();
+  _LoginEmailPageState createState() => _LoginEmailPageState();
 }
 
-class _LoginEmailScreenState extends State<LoginEmailScreen> {
+class _LoginEmailPageState extends State<LoginEmailPage> {
   final GlobalKey<FormState> _key = GlobalKey<FormState>();
 
   final _emailTextController = TextEditingController();
@@ -130,7 +130,7 @@ class _LoginEmailScreenState extends State<LoginEmailScreen> {
                 ),
                 onTap: () {
                   Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const ForgotPasswordScreen()));
+                      builder: (context) => const ForgotPasswordPage()));
                 },
               ),
               const SizedBox(height: 60),

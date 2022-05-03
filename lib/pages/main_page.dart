@@ -4,18 +4,18 @@ import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:pickmeup/pages/about_us.dart';
 import 'package:pickmeup/pages/contact_us.dart';
-import 'package:pickmeup/pages/location_picker_screen.dart';
-import 'package:pickmeup/pages/login_screen.dart';
+import 'package:pickmeup/pages/location_picker_page.dart';
+import 'package:pickmeup/pages/login_page.dart';
 import 'package:pickmeup/widgets/common_elevated_button.dart';
 
-class MainScreen extends StatefulWidget {
-  const MainScreen({Key? key}) : super(key: key);
+class MainPage extends StatefulWidget {
+  const MainPage({Key? key}) : super(key: key);
 
   @override
-  _MainScreenState createState() => _MainScreenState();
+  _MainPageState createState() => _MainPageState();
 }
 
-class _MainScreenState extends State<MainScreen> {
+class _MainPageState extends State<MainPage> {
   // OSM Map controller
   MapController mapController = MapController(
     initMapWithUserPosition: true,
@@ -55,7 +55,8 @@ class _MainScreenState extends State<MainScreen> {
               child: const Center(child: Text('Account Name')),
             ),
             ListTile(
-              title: Text("Contact Us"),
+              title: const Text("Contact Us"),
+              leading: const Icon(Icons.call),
               onTap: () {
                 Navigator.push(
                   context,
@@ -66,20 +67,21 @@ class _MainScreenState extends State<MainScreen> {
             ),
             ListTile(
               title: const Text("About Us"),
+              leading: const Icon(Icons.info_outline_rounded),
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                      builder: (context) => const AboutUsPage()),
+                  MaterialPageRoute(builder: (context) => const AboutUsPage()),
                 );
               },
             ),
             ListTile(
               title: const Text("Log Out"),
+              leading: const Icon(Icons.logout_rounded),
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const LoginScreen()),
+                  MaterialPageRoute(builder: (context) => const LoginPage()),
                 );
               },
             ),
@@ -186,7 +188,7 @@ _rideLocationPicker(context) {
           child: const Text("Pick Current Location"),
           onPressed: () {
             Navigator.push(context, MaterialPageRoute(builder: (context) {
-              return LocationPickerScreen(option: 'Current Location');
+              return LocationPickerPage(option: 'Current Location');
             }));
           },
         ),
@@ -195,7 +197,7 @@ _rideLocationPicker(context) {
           child: const Text("Pick Destination"),
           onPressed: () {
             Navigator.push(context, MaterialPageRoute(builder: (context) {
-              return LocationPickerScreen(option: 'Destination');
+              return LocationPickerPage(option: 'Destination');
             }));
           },
         )
@@ -214,7 +216,7 @@ _deliveryLocationPicker(context) {
           child: const Text("Pick Current Location"),
           onPressed: () {
             Navigator.push(context, MaterialPageRoute(builder: (context) {
-              return LocationPickerScreen(option: 'Current Location');
+              return LocationPickerPage(option: 'Current Location');
             }));
           },
         )

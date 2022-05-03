@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:pickmeup/pages/login_screen.dart';
+import 'package:pickmeup/pages/login_page.dart';
 
 void main(List<String> args) async {
   runApp(const MyApp());
@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.cyan,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: const LoginScreen(),
+      home: const LoginPage(),
     );
   }
 }

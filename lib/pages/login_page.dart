@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:pickmeup/pages/login_email_screen.dart';
-import 'package:pickmeup/pages/main_screen.dart';
+import 'package:pickmeup/pages/login_email_page.dart';
+import 'package:pickmeup/pages/main_page.dart';
 import 'package:pickmeup/pages/sign_up_screen.dart';
 import 'package:pickmeup/widgets/sign_in_button.dart';
 
-class LoginScreen extends StatelessWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+class LoginPage extends StatelessWidget {
+  const LoginPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +14,8 @@ class LoginScreen extends StatelessWidget {
       appBar: AppBar(
         systemOverlayStyle: const SystemUiOverlayStyle(
             statusBarColor: Colors.transparent,
-            statusBarIconBrightness: Brightness.dark),
+            statusBarIconBrightness: Brightness.dark,
+            systemNavigationBarColor: Color.fromARGB(255, 238, 238, 238)),
         automaticallyImplyLeading: false,
         backgroundColor: Colors.grey[200],
         elevation: 0,
@@ -46,7 +47,7 @@ class LoginScreen extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const LoginEmailScreen()),
+                      builder: (context) => const LoginEmailPage()),
                 );
               }),
           const SizedBox(height: 15),
@@ -58,7 +59,7 @@ class LoginScreen extends StatelessWidget {
                 _signInAsGuest();
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const MainScreen()),
+                  MaterialPageRoute(builder: (context) => const MainPage()),
                 );
               }),
           const Padding(
@@ -76,7 +77,7 @@ class LoginScreen extends StatelessWidget {
                 _signUp;
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => SignUpScreen()),
+                  MaterialPageRoute(builder: (context) => const SignUpScreen()),
                 );
               }),
         ],
