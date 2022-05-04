@@ -91,7 +91,6 @@ class _MainPageState extends State<MainPage> {
         body: OSMFlutter(
           controller: mapController,
           trackMyPosition: true,
-          // for testing purpose
           androidHotReloadSupport: true,
           initZoom: 15,
           stepZoom: 1.0,
@@ -178,6 +177,7 @@ class _MainPageState extends State<MainPage> {
   }
 }
 
+// Ride Location and Destination Picker Sheet
 _rideLocationPicker(context) {
   return Padding(
     padding: const EdgeInsets.all(15.0),
@@ -206,6 +206,7 @@ _rideLocationPicker(context) {
   );
 }
 
+// delivery Destination and description Picker Sheet
 _deliveryLocationPicker(context) {
   return Padding(
     padding: const EdgeInsets.all(15.0),
