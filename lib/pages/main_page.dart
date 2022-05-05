@@ -8,14 +8,20 @@ import 'package:pickmeup/pages/location_picker_page.dart';
 import 'package:pickmeup/pages/login_page.dart';
 import 'package:pickmeup/widgets/common_elevated_button.dart';
 
+import '../models/customer.dart';
+
 class MainPage extends StatefulWidget {
-  const MainPage({Key? key}) : super(key: key);
+  late final Customer account;
+
+  MainPage({Key? key, required this.account}) : super(key: key);
 
   @override
-  _MainPageState createState() => _MainPageState();
+  _MainPageState createState() => _MainPageState(account: this.account);
 }
 
 class _MainPageState extends State<MainPage> {
+  late final Customer account;
+  _MainPageState({required this.account});
   // OSM Map controller
   MapController mapController = MapController(
     initMapWithUserPosition: true,
@@ -52,7 +58,21 @@ class _MainPageState extends State<MainPage> {
           child: ListView(padding: const EdgeInsets.all(0), children: [
             DrawerHeader(
               decoration: BoxDecoration(color: Theme.of(context).primaryColor),
-              child: const Center(child: Text('Account Name')),
+              child: Center(
+                  child: Row(children: [
+                const Icon(
+                  Icons.person,
+                  color: Colors.white,
+                  size: 40,
+                ),
+                const SizedBox(
+                  width: 10,
+                ),
+                Text(
+                  account.name,
+                  style: const TextStyle(color: Colors.white),
+                )
+              ])),
             ),
             ListTile(
               title: const Text("Contact Us"),

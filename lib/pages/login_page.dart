@@ -5,6 +5,11 @@ import 'package:pickmeup/pages/main_page.dart';
 import 'package:pickmeup/pages/sign_up_screen.dart';
 import 'package:pickmeup/widgets/sign_in_button.dart';
 
+import '../models/customer.dart';
+
+Customer debug =
+    Customer(name: "debug", email: "debug@email.com", phone: "01234567", id: 0);
+
 class LoginPage extends StatelessWidget {
   const LoginPage({Key? key}) : super(key: key);
 
@@ -59,7 +64,10 @@ class LoginPage extends StatelessWidget {
                 _signInAsGuest();
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const MainPage()),
+                  MaterialPageRoute(
+                      builder: (context) => MainPage(
+                            account: debug,
+                          )),
                 );
               }),
           const Padding(
