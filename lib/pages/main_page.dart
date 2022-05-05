@@ -10,6 +10,8 @@ import 'package:pickmeup/widgets/common_elevated_button.dart';
 
 import '../models/customer.dart';
 
+TextEditingController deliverDescriptionController = TextEditingController();
+
 class MainPage extends StatefulWidget {
   late final Customer account;
 
@@ -173,13 +175,14 @@ class _MainPageState extends State<MainPage> {
 
   void _openLocationPickerSheet(option) {
     showModalBottomSheet(
+        isScrollControlled: true,
         backgroundColor: Colors.transparent,
         context: context,
         builder: (context) {
           return Container(
-              decoration: const BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
+              decoration: BoxDecoration(
+                  color: Colors.grey[200],
+                  borderRadius: const BorderRadius.only(
                       topLeft: Radius.circular(20),
                       topRight: Radius.circular(20))),
               child: (option == 'Delivery')
@@ -193,55 +196,142 @@ class _MainPageState extends State<MainPage> {
   // returns camera to original location
   void _returnToCurrentLocation() async {
     await mapController.currentLocation();
-    await mapController.setZoom(zoomLevel: 15);
+    if (await mapController.getZoom() < 15) {
+      await mapController.setZoom(zoomLevel: 15);
+    }
   }
 }
 
 // Ride Location and Destination Picker Sheet
 _rideLocationPicker(context) {
-  return Padding(
-    padding: const EdgeInsets.all(15.0),
-    child: Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        CustomElevatedButton(
-          child: const Text("Pick Current Location"),
-          onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) {
-              return LocationPickerPage(option: 'Current Location');
-            }));
-          },
-        ),
-        const Padding(padding: EdgeInsets.all(5)),
-        CustomElevatedButton(
-          child: const Text("Pick Destination"),
-          onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) {
-              return LocationPickerPage(option: 'Destination');
-            }));
-          },
-        )
-      ],
+  return Flexible(
+    child: Padding(
+      padding: const EdgeInsets.all(25.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          CustomElevatedButton(
+            child: const Text(
+              "Pick Current Location",
+              style: TextStyle(color: Colors.white),
+            ),
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return LocationPickerPage(option: 'Current Location');
+              }));
+            },
+          ),
+          const Padding(padding: EdgeInsets.all(5)),
+          CustomElevatedButton(
+            child: const Text(
+              "Pick Destination",
+              style: TextStyle(color: Colors.white),
+            ),
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return LocationPickerPage(option: 'Destination');
+              }));
+            },
+          ),
+          const Padding(padding: EdgeInsets.all(5)),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CustomElevatedButton(
+                child: const Text(
+                  "Cancel",
+                  style: TextStyle(color: Colors.cyan),
+                ),
+                color: Colors.white,
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+              CustomElevatedButton(
+                child: const Text(
+                  "Order",
+                  style: TextStyle(color: Colors.cyan),
+                ),
+                color: Colors.white,
+                onPressed: () {},
+              ),
+            ],
+          )
+        ],
+      ),
     ),
   );
 }
 
 // delivery Destination and description Picker Sheet
 _deliveryLocationPicker(context) {
-  return Padding(
-    padding: const EdgeInsets.all(15.0),
-    child: Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        CustomElevatedButton(
-          child: const Text("Pick Current Location"),
-          onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) {
-              return LocationPickerPage(option: 'Current Location');
-            }));
-          },
-        )
-      ],
+  return Flexible(
+    child: Padding(
+      padding: const EdgeInsets.all(25.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          CustomElevatedButton(
+            child: const Text(
+              "Pick Current Location",
+              style: TextStyle(color: Colors.white),
+            ),
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return LocationPickerPage(option: 'Current Location');
+              }));
+            },
+          ),
+          const Padding(padding: EdgeInsets.all(5)),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(25, 0, 25, 0),
+            child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: Colors.white,
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                  child: TextField(
+                      controller: deliverDescriptionController,
+                      minLines: 3,
+                      maxLines: 5,
+                      decoration: const InputDecoration(
+                        hintText: "Enter Description",
+                        border: InputBorder.none,
+                      )),
+                )),
+          ),
+          const Padding(padding: EdgeInsets.all(5)),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CustomElevatedButton(
+                child: const Text(
+                  "Cancel",
+                  style: TextStyle(color: Colors.cyan),
+                ),
+                color: Colors.white,
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+              CustomElevatedButton(
+                child: const Text(
+                  "Order",
+                  style: TextStyle(color: Colors.cyan),
+                ),
+                color: Colors.white,
+                onPressed: () {},
+              ),
+            ],
+          )
+        ],
+      ),
     ),
   );
 }

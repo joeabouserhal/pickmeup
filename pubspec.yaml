@@ -42,6 +42,8 @@ dependencies:
   build_runner: ^2.1.7
   flutter_osm_plugin: ^0.33.0+2
   flutter_native_splash: ^2.1.6
+  shared_preferences: ^2.0.13
+  modal_bottom_sheet: ^2.0.1
 
 dev_dependencies:
   flutter_test:
