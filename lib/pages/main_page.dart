@@ -13,12 +13,13 @@ import '../models/customer.dart';
 TextEditingController deliverDescriptionController = TextEditingController();
 
 class MainPage extends StatefulWidget {
-  late final Customer account;
+  final Customer account;
 
-  MainPage({Key? key, required this.account}) : super(key: key);
+  const MainPage({Key? key, required this.account}) : super(key: key);
 
   @override
-  _MainPageState createState() => _MainPageState(account: this.account);
+  // ignore: no_logic_in_create_state
+  _MainPageState createState() => _MainPageState(account: account);
 }
 
 class _MainPageState extends State<MainPage> {

@@ -5,14 +5,14 @@ import '../widgets/sign_in_button.dart';
 
 bool _isObscure = true;
 
-class SignUpScreen extends StatefulWidget {
-  const SignUpScreen({Key? key}) : super(key: key);
+class SignUpPage extends StatefulWidget {
+  const SignUpPage({Key? key}) : super(key: key);
 
   @override
-  State<SignUpScreen> createState() => _SignUpScreenState();
+  State<SignUpPage> createState() => _SignUpPageState();
 }
 
-class _SignUpScreenState extends State<SignUpScreen> {
+class _SignUpPageState extends State<SignUpPage> {
   // global key used for form validation
   final GlobalKey<FormState> _key = GlobalKey<FormState>();
   // text editor controllers

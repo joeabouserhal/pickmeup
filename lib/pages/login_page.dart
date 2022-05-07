@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pickmeup/pages/login_email_page.dart';
 import 'package:pickmeup/pages/main_page.dart';
-import 'package:pickmeup/pages/sign_up_screen.dart';
+import 'package:pickmeup/pages/sign_up_page.dart';
 import 'package:pickmeup/widgets/sign_in_button.dart';
 
 import '../models/customer.dart';
@@ -86,7 +86,7 @@ class LoginPage extends StatelessWidget {
                 _signUp;
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const SignUpScreen()),
+                  MaterialPageRoute(builder: (context) => const SignUpPage()),
                 );
               }),
         ],
