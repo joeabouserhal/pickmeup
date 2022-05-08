@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:pickmeup/pages/driver_login_page.dart';
-import 'package:pickmeup/pages/login_email_page.dart';
-import 'package:pickmeup/pages/main_page.dart';
-import 'package:pickmeup/pages/sign_up_page.dart';
-import 'package:pickmeup/widgets/sign_in_button.dart';
+import 'package:pickmeup/models/customer.dart';
+import 'package:pickmeup/pages/driver_login_email_page.dart';
+import 'package:pickmeup/pages/driver_main_page.dart';
+import 'package:pickmeup/pages/driver_sign_up_page.dart';
 
-import '../models/customer.dart';
+import '../widgets/sign_in_button.dart';
 
-Customer debug =
-    Customer(name: "debug", email: "debug@email.com", phone: "01234567", id: 0);
+Customer debug = Customer(
+    name: "driver debug", email: "debug@email.com", phone: "01234567", id: 0);
 
-class LoginPage extends StatelessWidget {
-  const LoginPage({Key? key}) : super(key: key);
+class DriverLoginPage extends StatelessWidget {
+  const DriverLoginPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +22,6 @@ class LoginPage extends StatelessWidget {
           statusBarIconBrightness: Brightness.dark,
           systemNavigationBarColor: Colors.grey[200],
         ),
-        automaticallyImplyLeading: false,
         backgroundColor: Colors.grey[200],
         elevation: 0,
       ),
@@ -35,39 +33,42 @@ class LoginPage extends StatelessWidget {
         // cross axis is horizontally
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const Padding(
-            padding: EdgeInsets.fromLTRB(25, 0, 0, 40),
-            child: Text(
-              'Login',
-              style: TextStyle(
-                fontSize: 40,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
+          Padding(
+            padding: const EdgeInsets.fromLTRB(25, 0, 0, 40),
+            child: Row(children: const [
+              Text(
+                'Driver Login',
+                style: TextStyle(
+                  fontSize: 40,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
               ),
-            ),
+              SizedBox(width: 10),
+              Icon(Icons.drive_eta_rounded, size: 50, color: Colors.black),
+            ]),
           ),
           SignInButton(
-              text: "Sign in with Email",
+              text: "Sign in as Driver with Email",
               color: Theme.of(context).primaryColor,
               textColor: Colors.white,
               onPressed: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const LoginEmailPage()),
+                      builder: (context) => const DriverLoginEmailPage()),
                 );
               }),
           const SizedBox(height: 15),
           SignInButton(
-              text: 'Sign in as Guest',
+              text: 'Sign in as Guest Driver',
               color: Colors.blueGrey,
               textColor: Colors.white,
               onPressed: () {
-                _signInAsGuest();
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => MainPage(
+                      builder: (context) => DriverMainPage(
                             account: debug,
                           )),
                 );
@@ -80,41 +81,18 @@ class LoginPage extends StatelessWidget {
             ),
           ),
           SignInButton(
-              text: 'Sign up',
+              text: 'Sign up as Driver',
               color: const Color.fromARGB(255, 181, 189, 194),
               textColor: Colors.black87,
               onPressed: () {
-                _signUp;
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const SignUpPage()),
+                  MaterialPageRoute(
+                      builder: (context) => const DriverSignUpPage()),
                 );
               }),
-          const SizedBox(height: 20),
-          GestureDetector(
-            child: Center(
-              child: Text(
-                "Are you a Driver?",
-                style: TextStyle(
-                    decoration: TextDecoration.underline,
-                    color: Theme.of(context).primaryColor),
-              ),
-            ),
-            onTap: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => const DriverLoginPage()));
-            },
-          ),
         ],
       )),
     );
-  }
-
-  void _signInAsGuest() {
-    print('sign in as guest');
-  }
-
-  void _signUp() {
-    print('sign up');
   }
 }
