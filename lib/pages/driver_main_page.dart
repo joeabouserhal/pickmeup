@@ -42,9 +42,15 @@ class _DriverMainPageState extends State<DriverMainPage> {
           foregroundColor: Colors.white,
           automaticallyImplyLeading: false,
           centerTitle: true,
-          title: const Text(
-            "Pick Me Up",
-          ),
+          title: Column(children: const [
+            Text(
+              "Pick Me Up",
+            ),
+            Text(
+              "Driver",
+              style: TextStyle(fontSize: 12, fontStyle: FontStyle.italic),
+            ),
+          ]),
           elevation: 3,
           leading: Builder(builder: (BuildContext context) {
             return IconButton(

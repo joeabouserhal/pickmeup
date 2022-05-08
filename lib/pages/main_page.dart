@@ -212,6 +212,16 @@ _rideLocationPicker(context) {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisSize: MainAxisSize.min,
         children: [
+          const Padding(
+            padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
+            child: Text(
+              "Ride:",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 20,
+              ),
+            ),
+          ),
           CustomElevatedButton(
             child: const Text(
               "Pick Current Location",
@@ -275,6 +285,11 @@ _deliveryLocationPicker(context) {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisSize: MainAxisSize.min,
         children: [
+          const Padding(
+            padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
+            child: Text("Delivery:",
+                textAlign: TextAlign.center, style: TextStyle(fontSize: 20)),
+          ),
           CustomElevatedButton(
             child: const Text(
               "Pick Current Location",
