@@ -184,7 +184,7 @@ class _DriverSignUpPageState extends State<DriverSignUpPage> {
                         if (value == null || value.isEmpty) {
                           return '  Please enter your license number';
                         }
-                        if (!RegExp(r'/[a-zA-Z]{1,6}/').hasMatch(value)) {
+                        if (!RegExp(r'[A-Z][0-9]{1,6}$').hasMatch(value)) {
                           return '  Invalid License Number, ex: B123456';
                         }
                         return null;
