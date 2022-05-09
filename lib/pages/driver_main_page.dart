@@ -4,7 +4,6 @@ import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:pickmeup/pages/about_us.dart';
 import 'package:pickmeup/pages/contact_us.dart';
-import 'package:pickmeup/pages/location_picker_page.dart';
 import 'package:pickmeup/pages/login_page.dart';
 import 'package:pickmeup/widgets/common_elevated_button.dart';
 
