@@ -44,6 +44,9 @@ dependencies:
   flutter_native_splash: ^2.1.6
   shared_preferences: ^2.0.13
   modal_bottom_sheet: ^2.0.1
+  firebase_core: ^1.17.0
+  firebase_auth: ^3.3.18
+  firebase_auth_web: ^3.3.15
 
 dev_dependencies:
   flutter_test:
