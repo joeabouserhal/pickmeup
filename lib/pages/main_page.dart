@@ -4,13 +4,15 @@ import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:pickmeup/pages/about_us.dart';
 import 'package:pickmeup/pages/contact_us.dart';
-import 'package:pickmeup/pages/location_picker_page.dart';
 import 'package:pickmeup/pages/login_page.dart';
 import 'package:pickmeup/widgets/common_elevated_button.dart';
 
 import '../models/customer.dart';
 
 TextEditingController deliverDescriptionController = TextEditingController();
+var rideLocation;
+var rideDestination;
+var deliveryLocation;
 
 class MainPage extends StatefulWidget {
   final Customer account;
@@ -56,6 +58,16 @@ class _MainPageState extends State<MainPage> {
               },
             );
           }),
+          actions: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+              child: GestureDetector(
+                  child: const Icon(Icons.history_rounded),
+                  onTap: () {
+                    _openOrderHistorySheet();
+                  }),
+            )
+          ],
         ),
         drawer: Drawer(
           child: ListView(padding: const EdgeInsets.all(0), children: [
@@ -194,6 +206,26 @@ class _MainPageState extends State<MainPage> {
         });
   }
 
+  void _openOrderHistorySheet() {
+    showModalBottomSheet(
+        isScrollControlled: true,
+        backgroundColor: Colors.transparent,
+        context: context,
+        builder: (context) {
+          return Container(
+            decoration: BoxDecoration(
+                color: Colors.grey[200],
+                borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(20),
+                    topRight: Radius.circular(20))),
+            child: Padding(
+              padding: const EdgeInsets.all(25),
+              child: Text("Test"),
+            ),
+          );
+        });
+  }
+
   // returns camera to original location
   void _returnToCurrentLocation() async {
     await mapController.currentLocation();
@@ -223,26 +255,37 @@ _rideLocationPicker(context) {
             ),
           ),
           CustomElevatedButton(
-            child: const Text(
-              "Pick Current Location",
-              style: TextStyle(color: Colors.white),
-            ),
-            onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return LocationPickerPage(option: 'Current Location');
-              }));
-            },
-          ),
+              child: const Text(
+                "Pick Current Location",
+                style: TextStyle(color: Colors.white),
+              ),
+              onPressed: () async {
+                rideLocation = await showSimplePickerLocation(
+                  context: context,
+                  isDismissible: true,
+                  title: "Ride Location Picker",
+                  textConfirmPicker: "Pick",
+                  initCurrentUserPosition: true,
+                  initZoom: 15,
+                  radius: 8.0,
+                );
+              }),
           const Padding(padding: EdgeInsets.all(5)),
           CustomElevatedButton(
             child: const Text(
               "Pick Destination",
               style: TextStyle(color: Colors.white),
             ),
-            onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return LocationPickerPage(option: 'Destination');
-              }));
+            onPressed: () async {
+              rideDestination = await showSimplePickerLocation(
+                context: context,
+                isDismissible: true,
+                title: "Ride Destination Picker",
+                textConfirmPicker: "Pick",
+                initCurrentUserPosition: true,
+                initZoom: 15,
+                radius: 8.0,
+              );
             },
           ),
           const Padding(padding: EdgeInsets.all(5)),
@@ -295,10 +338,16 @@ _deliveryLocationPicker(context) {
               "Pick Current Location",
               style: TextStyle(color: Colors.white),
             ),
-            onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return LocationPickerPage(option: 'Current Location');
-              }));
+            onPressed: () async {
+              deliveryLocation = await showSimplePickerLocation(
+                context: context,
+                isDismissible: true,
+                title: "Delivery Location Picker",
+                textConfirmPicker: "Pick",
+                initCurrentUserPosition: true,
+                initZoom: 15,
+                radius: 8.0,
+              );
             },
           ),
           const Padding(padding: EdgeInsets.all(5)),
