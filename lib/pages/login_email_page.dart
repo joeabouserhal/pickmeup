@@ -1,6 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pickmeup/pages/forgot_password_page.dart';
+import 'package:pickmeup/pages/main_page.dart';
 
 import 'package:pickmeup/widgets/sign_in_button.dart';
 
@@ -91,11 +94,6 @@ class _LoginEmailPageState extends State<LoginEmailPage> {
                       if (value == null || value.isEmpty) {
                         return '  Please enter your password';
                       }
-                      if (!RegExp(
-                              r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$')
-                          .hasMatch(value)) {
-                        return '  Invalid Password';
-                      }
                       return null;
                     },
                     keyboardType: TextInputType.visiblePassword,
@@ -141,7 +139,25 @@ class _LoginEmailPageState extends State<LoginEmailPage> {
                   onPressed: () {
                     if (_key.currentState!.validate()) {
                       _key.currentState!.save();
-                      _signInWithEmail();
+                      FirebaseAuth.instance
+                          .signInWithEmailAndPassword(
+                            email: _emailTextController.text,
+                            password: _passwordTextController.text,
+                          )
+                          .then((value) => {
+                                Fluttertoast.showToast(
+                                    msg:
+                                        'Successfully logged in as ${value.user?.email}'),
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => MainPage()))
+                              })
+                          .onError((error, stackTrace) {
+                        Fluttertoast.showToast(
+                            msg: 'Error: $error\n$stackTrace');
+                        throw error.toString();
+                      });
                     }
                   }),
             ],
@@ -149,9 +165,5 @@ class _LoginEmailPageState extends State<LoginEmailPage> {
         ),
       ),
     );
-  }
-
-  void _signInWithEmail() {
-    print('Sign in with email');
   }
 }

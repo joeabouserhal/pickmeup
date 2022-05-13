@@ -1,5 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:pickmeup/pages/main_page.dart';
 
 import '../widgets/sign_in_button.dart';
 
@@ -244,7 +246,16 @@ class _SignUpPageState extends State<SignUpPage> {
                     onPressed: () {
                       if (_key.currentState!.validate()) {
                         _key.currentState!.save();
-                        _signUpWithEmail();
+                        FirebaseAuth.instance
+                            .createUserWithEmailAndPassword(
+                                email: _emailTextController.text,
+                                password: _passwordTextController.text)
+                            .then((value) => {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: ((context) => MainPage()))),
+                                });
                       }
                     }),
               ],
@@ -252,6 +263,4 @@ class _SignUpPageState extends State<SignUpPage> {
           ),
         ));
   }
-
-  void _signUpWithEmail() {}
 }

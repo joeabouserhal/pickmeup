@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
@@ -15,18 +16,14 @@ var rideDestination;
 var deliveryLocation;
 
 class MainPage extends StatefulWidget {
-  final Customer account;
-
-  const MainPage({Key? key, required this.account}) : super(key: key);
+  const MainPage({Key? key}) : super(key: key);
 
   @override
   // ignore: no_logic_in_create_state
-  _MainPageState createState() => _MainPageState(account: account);
+  _MainPageState createState() => _MainPageState();
 }
 
 class _MainPageState extends State<MainPage> {
-  late final Customer account;
-  _MainPageState({required this.account});
   // OSM Map controller
   MapController mapController = MapController(
     initMapWithUserPosition: true,
@@ -74,18 +71,18 @@ class _MainPageState extends State<MainPage> {
             DrawerHeader(
               decoration: BoxDecoration(color: Theme.of(context).primaryColor),
               child: Center(
-                  child: Row(children: [
-                const Icon(
+                  child: Row(children: const [
+                Icon(
                   Icons.person,
                   color: Colors.white,
                   size: 40,
                 ),
-                const SizedBox(
+                SizedBox(
                   width: 10,
                 ),
                 Text(
-                  account.name,
-                  style: const TextStyle(color: Colors.white),
+                  "Debug",
+                  style: TextStyle(color: Colors.white),
                 )
               ])),
             ),
@@ -114,10 +111,13 @@ class _MainPageState extends State<MainPage> {
               title: const Text("Log Out"),
               leading: const Icon(Icons.logout_rounded),
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const LoginPage()),
-                );
+                FirebaseAuth.instance.signOut().then((value) => {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const LoginPage()),
+                      )
+                    });
               },
             ),
           ]),
@@ -218,8 +218,8 @@ class _MainPageState extends State<MainPage> {
                 borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(20),
                     topRight: Radius.circular(20))),
-            child: Padding(
-              padding: const EdgeInsets.all(25),
+            child: const Padding(
+              padding: EdgeInsets.all(25),
               child: Text("Test"),
             ),
           );
