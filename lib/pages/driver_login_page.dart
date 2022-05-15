@@ -1,14 +1,13 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pickmeup/models/customer.dart';
 import 'package:pickmeup/pages/driver_login_email_page.dart';
 import 'package:pickmeup/pages/driver_main_page.dart';
 import 'package:pickmeup/pages/driver_sign_up_page.dart';
+import 'package:pickmeup/pages/main_page.dart';
 
 import '../widgets/sign_in_button.dart';
-
-Customer debug = Customer(
-    name: "driver debug", email: "debug@email.com", phone: "01234567", id: 0);
 
 class DriverLoginPage extends StatelessWidget {
   const DriverLoginPage({Key? key}) : super(key: key);
@@ -65,13 +64,16 @@ class DriverLoginPage extends StatelessWidget {
               color: Colors.blueGrey,
               textColor: Colors.white,
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => DriverMainPage(
-                            account: debug,
-                          )),
-                );
+                FirebaseAuth.instance
+                    .signInAnonymously()
+                    .then((value) => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => MainPage(
+                                    email: value.user?.email,
+                                    uid: value.user?.uid,
+                                  )),
+                        ));
               }),
           const Padding(
             padding: EdgeInsets.all(20.0),

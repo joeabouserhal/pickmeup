@@ -151,11 +151,13 @@ class _LoginEmailPageState extends State<LoginEmailPage> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => MainPage()))
+                                        builder: (context) => MainPage(
+                                              email: value.user?.email,
+                                              uid: value.user?.uid,
+                                            )))
                               })
                           .onError((error, stackTrace) {
-                        Fluttertoast.showToast(
-                            msg: 'Error: $error\n$stackTrace');
+                        Fluttertoast.showToast(msg: 'Error: $error');
                         throw error.toString();
                       });
                     }

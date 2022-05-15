@@ -75,7 +75,7 @@ class _DriverMainPageState extends State<DriverMainPage> {
                   width: 10,
                 ),
                 Text(
-                  account.name,
+                  'debug',
                   style: const TextStyle(color: Colors.white),
                 )
               ])),

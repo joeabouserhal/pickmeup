@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -6,29 +7,35 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:pickmeup/pages/about_us.dart';
 import 'package:pickmeup/pages/contact_us.dart';
 import 'package:pickmeup/pages/login_page.dart';
+import 'package:pickmeup/utils/database_manager.dart';
 import 'package:pickmeup/widgets/common_elevated_button.dart';
 
-import '../models/customer.dart';
-
-TextEditingController deliverDescriptionController = TextEditingController();
 var rideLocation;
 var rideDestination;
 var deliveryLocation;
 
+TextEditingController deliverDescriptionController = TextEditingController();
+
+String name = "";
+
 class MainPage extends StatefulWidget {
-  const MainPage({Key? key}) : super(key: key);
+  final email;
+  final uid;
+  const MainPage({Key? key, required this.email, required this.uid})
+      : super(key: key);
 
   @override
   // ignore: no_logic_in_create_state
-  _MainPageState createState() => _MainPageState();
+  _MainPageState createState() => _MainPageState(email: email, uid: uid);
 }
 
 class _MainPageState extends State<MainPage> {
+  final email;
+  final uid;
+  _MainPageState({required this.email, required this.uid});
   // OSM Map controller
   MapController mapController = MapController(
     initMapWithUserPosition: true,
-    // center to lebanon by default
-    initPosition: GeoPoint(latitude: 33.8547, longitude: 35.8623),
   );
 
   @override
@@ -71,18 +78,20 @@ class _MainPageState extends State<MainPage> {
             DrawerHeader(
               decoration: BoxDecoration(color: Theme.of(context).primaryColor),
               child: Center(
-                  child: Row(children: const [
-                Icon(
+                  child: Row(children: [
+                const Icon(
                   Icons.person,
                   color: Colors.white,
                   size: 40,
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 10,
                 ),
-                Text(
-                  "Debug",
-                  style: TextStyle(color: Colors.white),
+                FutureBuilder(
+                  future: DatabaseManager().getFullName(uid),
+                  builder: (context, snapshot) {
+                    return Text(snapshot.data.toString());
+                  },
                 )
               ])),
             ),
@@ -260,7 +269,7 @@ _rideLocationPicker(context) {
                 style: TextStyle(color: Colors.white),
               ),
               onPressed: () async {
-                rideLocation = await showSimplePickerLocation(
+                var rideLocation = await showSimplePickerLocation(
                   context: context,
                   isDismissible: true,
                   title: "Ride Location Picker",

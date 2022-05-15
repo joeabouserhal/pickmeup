@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pickmeup/pages/driver_login_page.dart';
@@ -58,11 +59,13 @@ class LoginPage extends StatelessWidget {
               color: Colors.blueGrey,
               textColor: Colors.white,
               onPressed: () {
-                _signInAsGuest();
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => MainPage()),
-                );
+                FirebaseAuth.instance
+                    .signInAnonymously()
+                    .then((value) => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const LoginEmailPage()),
+                        ));
               }),
           const Padding(
             padding: EdgeInsets.all(20.0),
