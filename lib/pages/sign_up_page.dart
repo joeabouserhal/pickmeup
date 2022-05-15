@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -251,6 +252,15 @@ class _SignUpPageState extends State<SignUpPage> {
                                 email: _emailTextController.text,
                                 password: _passwordTextController.text)
                             .then((value) => {
+                                  FirebaseFirestore.instance
+                                      .collection('users')
+                                      .doc(value.user?.uid)
+                                      .set({
+                                    'first_name': _firstNameTextController.text,
+                                    'last_name': _lastNameTextController.text,
+                                    'phone_number':
+                                        _phoneNumberTextController.text,
+                                  }),
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
