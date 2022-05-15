@@ -1,5 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:pickmeup/pages/driver_main_page.dart';
+import 'package:pickmeup/pages/main_page.dart';
 
 import '../widgets/sign_in_button.dart';
 
@@ -272,7 +276,29 @@ class _DriverSignUpPageState extends State<DriverSignUpPage> {
                     onPressed: () {
                       if (_key.currentState!.validate()) {
                         _key.currentState!.save();
-                        _signUpWithEmail();
+                        FirebaseAuth.instance
+                            .createUserWithEmailAndPassword(
+                                email: _emailTextController.text,
+                                password: _passwordTextController.text)
+                            .then((value) => {
+                                  FirebaseFirestore.instance
+                                      .collection('drivers')
+                                      .doc(value.user?.uid)
+                                      .set({
+                                    'first_name': _firstNameTextController.text,
+                                    'last_name': _lastNameTextController.text,
+                                    'license_number':
+                                        _licenseNumberTextController.text,
+                                    'phone_number':
+                                        _phoneNumberTextController.text,
+                                  }),
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: ((context) => DriverMainPage(
+                                              email: value.user?.email,
+                                              uid: value.user?.uid)))),
+                                });
                       }
                     }),
               ],
@@ -280,6 +306,4 @@ class _DriverSignUpPageState extends State<DriverSignUpPage> {
           ),
         ));
   }
-
-  void _signUpWithEmail() {}
 }

@@ -6,8 +6,25 @@ class DatabaseManager {
     return a['first_name'] + " " + a['last_name'];
   }
 
+  Future<String> getFullNameDriver(uid) async {
+    var a =
+        await FirebaseFirestore.instance.collection("drivers").doc(uid).get();
+    return a['first_name'] + " " + a['last_name'];
+  }
+
   Future<String> getPhoneNumber(uid) async {
     var a = await FirebaseFirestore.instance.collection('users').doc(uid).get();
     return a['phone_number'];
+  }
+
+  Future<bool> isCustomer(uid) async {
+    var a = await FirebaseFirestore.instance.collection('users').doc(uid).get();
+    return a.exists;
+  }
+
+  Future<bool> isDriver(uid) async {
+    var a =
+        await FirebaseFirestore.instance.collection('drivers').doc(uid).get();
+    return a.exists;
   }
 }

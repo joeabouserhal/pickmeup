@@ -5,23 +5,27 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:pickmeup/pages/about_us.dart';
 import 'package:pickmeup/pages/contact_us.dart';
 import 'package:pickmeup/pages/login_page.dart';
+import 'package:pickmeup/utils/database_manager.dart';
 import 'package:pickmeup/widgets/common_elevated_button.dart';
 
 import '../models/customer.dart';
 
 class DriverMainPage extends StatefulWidget {
-  final Customer account;
-
-  const DriverMainPage({Key? key, required this.account}) : super(key: key);
+  final email;
+  final uid;
+  const DriverMainPage({Key? key, required this.email, required this.uid})
+      : super(key: key);
 
   @override
   // ignore: no_logic_in_create_state
-  _DriverMainPageState createState() => _DriverMainPageState(account: account);
+  _DriverMainPageState createState() =>
+      _DriverMainPageState(email: email, uid: uid);
 }
 
 class _DriverMainPageState extends State<DriverMainPage> {
-  late final Customer account;
-  _DriverMainPageState({required this.account});
+  final email;
+  final uid;
+  _DriverMainPageState({required this.email, required this.uid});
   // OSM Map controller
   MapController mapController = MapController(
     initMapWithUserPosition: true,
@@ -74,9 +78,11 @@ class _DriverMainPageState extends State<DriverMainPage> {
                 const SizedBox(
                   width: 10,
                 ),
-                Text(
-                  'debug',
-                  style: const TextStyle(color: Colors.white),
+                FutureBuilder(
+                  future: DatabaseManager().getFullNameDriver(uid),
+                  builder: (context, snapshot) {
+                    return Text(snapshot.data.toString());
+                  },
                 )
               ])),
             ),
