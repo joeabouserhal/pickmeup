@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -7,6 +6,7 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:pickmeup/pages/about_us.dart';
 import 'package:pickmeup/pages/contact_us.dart';
 import 'package:pickmeup/pages/login_page.dart';
+import 'package:pickmeup/pages/profile_page.dart';
 import 'package:pickmeup/utils/database_manager.dart';
 import 'package:pickmeup/widgets/common_elevated_button.dart';
 
@@ -19,20 +19,14 @@ TextEditingController deliverDescriptionController = TextEditingController();
 String name = "";
 
 class MainPage extends StatefulWidget {
-  final email;
-  final uid;
-  const MainPage({Key? key, required this.email, required this.uid})
-      : super(key: key);
+  const MainPage({Key? key}) : super(key: key);
 
   @override
   // ignore: no_logic_in_create_state
-  _MainPageState createState() => _MainPageState(email: email, uid: uid);
+  _MainPageState createState() => _MainPageState();
 }
 
 class _MainPageState extends State<MainPage> {
-  final email;
-  final uid;
-  _MainPageState({required this.email, required this.uid});
   // OSM Map controller
   MapController mapController = MapController(
     initMapWithUserPosition: true,
@@ -40,7 +34,7 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
-    final user = FirebaseAuth.instance.currentUser;
+    final uid = FirebaseAuth.instance.currentUser?.uid;
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
@@ -51,8 +45,8 @@ class _MainPageState extends State<MainPage> {
           foregroundColor: Colors.white,
           automaticallyImplyLeading: false,
           centerTitle: true,
-          title: Text(
-            "Pick Me Up ${user!.email}",
+          title: const Text(
+            "Pick Me Up",
           ),
           elevation: 3,
           leading: Builder(builder: (BuildContext context) {
@@ -81,7 +75,7 @@ class _MainPageState extends State<MainPage> {
               child: Center(
                   child: Row(children: [
                 const Icon(
-                  Icons.person,
+                  Icons.account_circle,
                   color: Colors.white,
                   size: 40,
                 ),
@@ -91,10 +85,23 @@ class _MainPageState extends State<MainPage> {
                 FutureBuilder(
                   future: DatabaseManager().getFullName(uid),
                   builder: (context, snapshot) {
-                    return Text(snapshot.data.toString());
+                    return Text(
+                      snapshot.data.toString(),
+                      style: const TextStyle(color: Colors.white),
+                    );
                   },
                 )
               ])),
+            ),
+            ListTile(
+              title: const Text("Profile"),
+              leading: const Icon(Icons.person),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const ProfilePage()),
+                );
+              },
             ),
             ListTile(
               title: const Text("Contact Us"),

@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
@@ -6,26 +7,16 @@ import 'package:pickmeup/pages/about_us.dart';
 import 'package:pickmeup/pages/contact_us.dart';
 import 'package:pickmeup/pages/login_page.dart';
 import 'package:pickmeup/utils/database_manager.dart';
-import 'package:pickmeup/widgets/common_elevated_button.dart';
-
-import '../models/customer.dart';
 
 class DriverMainPage extends StatefulWidget {
-  final email;
-  final uid;
-  const DriverMainPage({Key? key, required this.email, required this.uid})
-      : super(key: key);
+  const DriverMainPage({Key? key}) : super(key: key);
 
   @override
   // ignore: no_logic_in_create_state
-  _DriverMainPageState createState() =>
-      _DriverMainPageState(email: email, uid: uid);
+  _DriverMainPageState createState() => _DriverMainPageState();
 }
 
 class _DriverMainPageState extends State<DriverMainPage> {
-  final email;
-  final uid;
-  _DriverMainPageState({required this.email, required this.uid});
   // OSM Map controller
   MapController mapController = MapController(
     initMapWithUserPosition: true,
@@ -35,6 +26,7 @@ class _DriverMainPageState extends State<DriverMainPage> {
 
   @override
   Widget build(BuildContext context) {
+    final uid = FirebaseAuth.instance.currentUser?.uid;
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
@@ -81,7 +73,10 @@ class _DriverMainPageState extends State<DriverMainPage> {
                 FutureBuilder(
                   future: DatabaseManager().getFullNameDriver(uid),
                   builder: (context, snapshot) {
-                    return Text(snapshot.data.toString());
+                    return Text(
+                      snapshot.data.toString(),
+                      style: const TextStyle(color: Colors.white),
+                    );
                   },
                 )
               ])),

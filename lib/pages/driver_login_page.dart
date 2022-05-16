@@ -68,11 +68,7 @@ class DriverLoginPage extends StatelessWidget {
                     .signInAnonymously()
                     .then((value) => Navigator.push(
                           context,
-                          MaterialPageRoute(
-                              builder: (context) => MainPage(
-                                    email: value.user?.email,
-                                    uid: value.user?.uid,
-                                  )),
+                          MaterialPageRoute(builder: (context) => MainPage()),
                         ));
               }),
           const Padding(

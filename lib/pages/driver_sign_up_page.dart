@@ -297,9 +297,8 @@ class _DriverSignUpPageState extends State<DriverSignUpPage> {
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: ((context) => DriverMainPage(
-                                              email: value.user?.email,
-                                              uid: value.user?.uid)))),
+                                          builder: ((context) =>
+                                              DriverMainPage()))),
                                 });
                       }
                     }),

@@ -156,10 +156,7 @@ class _DriverLoginEmailPageState extends State<DriverLoginEmailPage> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => MainPage(
-                                              email: value.user?.email,
-                                              uid: value.user?.uid,
-                                            )))
+                                        builder: (context) => MainPage()))
                               })
                           .onError((error, stackTrace) {
                         Fluttertoast.showToast(msg: 'Error: $error');
