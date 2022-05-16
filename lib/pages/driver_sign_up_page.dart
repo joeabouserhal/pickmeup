@@ -72,7 +72,7 @@ class _DriverSignUpPageState extends State<DriverSignUpPage> {
                         ),
                         child: TextFormField(
                           controller: _firstNameTextController,
-                          keyboardType: TextInputType.emailAddress,
+                          keyboardType: TextInputType.name,
                           decoration: const InputDecoration(
                             border: InputBorder.none,
                             prefixIcon: Icon(Icons.person),
@@ -96,7 +96,7 @@ class _DriverSignUpPageState extends State<DriverSignUpPage> {
                         ),
                         child: TextFormField(
                           controller: _lastNameTextController,
-                          keyboardType: TextInputType.emailAddress,
+                          keyboardType: TextInputType.name,
                           decoration: const InputDecoration(
                             border: InputBorder.none,
                             prefixIcon: Icon(Icons.person),
@@ -123,7 +123,7 @@ class _DriverSignUpPageState extends State<DriverSignUpPage> {
                     ),
                     child: TextFormField(
                       controller: _phoneNumberTextController,
-                      keyboardType: TextInputType.emailAddress,
+                      keyboardType: TextInputType.number,
                       decoration: const InputDecoration(
                         border: InputBorder.none,
                         prefixIcon: Icon(Icons.phone),
