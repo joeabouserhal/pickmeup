@@ -70,6 +70,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         ),
                         child: TextFormField(
                           controller: _firstNameTextController,
+                          textCapitalization: TextCapitalization.words,
                           keyboardType: TextInputType.name,
                           decoration: const InputDecoration(
                             border: InputBorder.none,
@@ -95,6 +96,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         child: TextFormField(
                           controller: _lastNameTextController,
                           keyboardType: TextInputType.name,
+                          textCapitalization: TextCapitalization.words,
                           decoration: const InputDecoration(
                             border: InputBorder.none,
                             prefixIcon: Icon(Icons.person),

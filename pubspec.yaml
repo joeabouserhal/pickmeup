@@ -40,7 +40,6 @@ dependencies:
   provider: ^6.0.2
   fluttertoast: ^8.0.9
   build_runner: ^2.1.7
-  flutter_osm_plugin: ^0.33.0+2
   flutter_native_splash: ^2.1.6
   shared_preferences: ^2.0.13
   modal_bottom_sheet: ^2.0.1
@@ -48,6 +47,7 @@ dependencies:
   firebase_auth: ^3.3.18
   firebase_auth_web: ^3.3.15
   cloud_firestore: ^3.1.15
+  flutter_osm_plugin: ^0.34.0+1
 
 dev_dependencies:
   flutter_test:
