@@ -121,7 +121,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     ),
                     child: TextFormField(
                       controller: _phoneNumberTextController,
-                      keyboardType: TextInputType.emailAddress,
+                      keyboardType: TextInputType.phone,
                       decoration: const InputDecoration(
                         border: InputBorder.none,
                         prefixIcon: Icon(Icons.phone),
