@@ -63,8 +63,7 @@ class LoginPage extends StatelessWidget {
                     .signInAnonymously()
                     .then((value) => Navigator.push(
                           context,
-                          MaterialPageRoute(
-                              builder: (context) => const LoginEmailPage()),
+                          MaterialPageRoute(builder: (context) => MainPage()),
                         ));
               }),
           const Padding(

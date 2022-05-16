@@ -73,21 +73,27 @@ class _MainPageState extends State<MainPage> {
             DrawerHeader(
               decoration: BoxDecoration(color: Theme.of(context).primaryColor),
               child: Center(
-                  child: Row(children: [
+                  child: Column(children: [
+                const SizedBox(
+                  height: 10,
+                ),
                 const Icon(
                   Icons.account_circle,
                   color: Colors.white,
-                  size: 40,
+                  size: 80,
                 ),
                 const SizedBox(
-                  width: 10,
+                  height: 10,
                 ),
                 FutureBuilder(
                   future: DatabaseManager().getFullName(uid),
                   builder: (context, snapshot) {
                     return Text(
                       snapshot.data.toString(),
-                      style: const TextStyle(color: Colors.white),
+                      style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w400),
                     );
                   },
                 )
