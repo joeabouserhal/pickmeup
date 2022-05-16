@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:pickmeup/utils/database_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -21,14 +22,23 @@ class ProfilePage extends StatelessWidget {
           elevation: 3,
         ),
         body: Padding(
-            padding: EdgeInsets.all(40),
+            padding: const EdgeInsets.all(40),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Center(
+                const Center(
                     child: Icon(Icons.account_circle,
                         size: 100, color: Colors.black)),
+                FutureBuilder(
+                  future: DatabaseManager().getFullName(user?.uid),
+                  builder: (context, snapshot) {
+                    return Text(
+                      snapshot.data.toString(),
+                      style: const TextStyle(color: Colors.white),
+                    );
+                  },
+                )
               ],
             )));
   }
