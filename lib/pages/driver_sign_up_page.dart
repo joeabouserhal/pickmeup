@@ -123,7 +123,7 @@ class _DriverSignUpPageState extends State<DriverSignUpPage> {
                     ),
                     child: TextFormField(
                       controller: _phoneNumberTextController,
-                      keyboardType: TextInputType.emailAddress,
+                      keyboardType: TextInputType.number,
                       decoration: const InputDecoration(
                         border: InputBorder.none,
                         prefixIcon: Icon(Icons.phone),
