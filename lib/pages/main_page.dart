@@ -40,6 +40,7 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
+    final user = FirebaseAuth.instance.currentUser;
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
@@ -50,8 +51,8 @@ class _MainPageState extends State<MainPage> {
           foregroundColor: Colors.white,
           automaticallyImplyLeading: false,
           centerTitle: true,
-          title: const Text(
-            "Pick Me Up",
+          title: Text(
+            "Pick Me Up ${user!.email}",
           ),
           elevation: 3,
           leading: Builder(builder: (BuildContext context) {
