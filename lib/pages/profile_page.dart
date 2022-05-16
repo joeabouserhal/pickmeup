@@ -33,10 +33,7 @@ class ProfilePage extends StatelessWidget {
                 FutureBuilder(
                   future: DatabaseManager().getFullName(user?.uid),
                   builder: (context, snapshot) {
-                    return Text(
-                      snapshot.data.toString(),
-                      style: const TextStyle(color: Colors.white),
-                    );
+                    return Text("Name: ${snapshot.data.toString()}");
                   },
                 )
               ],
