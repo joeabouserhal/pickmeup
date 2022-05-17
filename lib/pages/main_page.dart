@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart' as firestore;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -10,9 +11,9 @@ import 'package:pickmeup/pages/profile_page.dart';
 import 'package:pickmeup/utils/database_manager.dart';
 import 'package:pickmeup/widgets/common_elevated_button.dart';
 
-var rideLocation;
-var rideDestination;
-var deliveryLocation;
+GeoPoint rideLocation = const firestore.GeoPoint(0, 0) as GeoPoint;
+GeoPoint rideDestination = const firestore.GeoPoint(0, 0) as GeoPoint;
+GeoPoint deliveryLocation = const firestore.GeoPoint(0, 0) as GeoPoint;
 
 TextEditingController deliverDescriptionController = TextEditingController();
 
@@ -283,7 +284,7 @@ _rideLocationPicker(context) {
                 style: TextStyle(color: Colors.white),
               ),
               onPressed: () async {
-                var rideLocation = await showSimplePickerLocation(
+                rideLocation = (await showSimplePickerLocation(
                   context: context,
                   isDismissible: true,
                   title: "Ride Location Picker",
@@ -291,7 +292,7 @@ _rideLocationPicker(context) {
                   initCurrentUserPosition: true,
                   initZoom: 15,
                   radius: 8.0,
-                );
+                ))!;
               }),
           const Padding(padding: EdgeInsets.all(5)),
           CustomElevatedButton(
@@ -300,7 +301,7 @@ _rideLocationPicker(context) {
               style: TextStyle(color: Colors.white),
             ),
             onPressed: () async {
-              rideDestination = await showSimplePickerLocation(
+              rideDestination = (await showSimplePickerLocation(
                 context: context,
                 isDismissible: true,
                 title: "Ride Destination Picker",
@@ -308,7 +309,7 @@ _rideLocationPicker(context) {
                 initCurrentUserPosition: true,
                 initZoom: 15,
                 radius: 8.0,
-              );
+              ))!;
             },
           ),
           const Padding(padding: EdgeInsets.all(5)),
@@ -332,7 +333,15 @@ _rideLocationPicker(context) {
                   style: TextStyle(color: Colors.cyan),
                 ),
                 color: Colors.white,
-                onPressed: () {},
+                onPressed: () {
+                  firestore.FirebaseFirestore.instance
+                      .collection('rides')
+                      .doc()
+                      .set({
+                    'ordered_by': FirebaseAuth.instance.currentUser?.uid,
+                    'is_completed': false,
+                  });
+                },
               ),
             ],
           )
@@ -362,7 +371,7 @@ _deliveryLocationPicker(context) {
               style: TextStyle(color: Colors.white),
             ),
             onPressed: () async {
-              deliveryLocation = await showSimplePickerLocation(
+              deliveryLocation = (await showSimplePickerLocation(
                 context: context,
                 isDismissible: true,
                 title: "Delivery Location Picker",
@@ -370,7 +379,7 @@ _deliveryLocationPicker(context) {
                 initCurrentUserPosition: true,
                 initZoom: 15,
                 radius: 8.0,
-              );
+              ))!;
             },
           ),
           const Padding(padding: EdgeInsets.all(5)),

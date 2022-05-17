@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:pickmeup/pages/login_page.dart';
 
 void main(List<String> args) async {
-  WidgetsFlutterBinding.ensureInitialized();
+  WidgetsFlutterBinding?.ensureInitialized();
   await Firebase.initializeApp();
   runApp(const MyApp());
 }
