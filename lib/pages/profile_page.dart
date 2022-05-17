@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:getwidget/colors/gf_color.dart';
 import 'package:getwidget/components/button/gf_button.dart';
 import 'package:getwidget/components/list_tile/gf_list_tile.dart';
@@ -74,28 +75,37 @@ class ProfilePage extends StatelessWidget {
                             context: context,
                             builder: (context) {
                               return AlertDialog(
+                                shape: const RoundedRectangleBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(8))),
                                 title: const Text("Are you sure?"),
                                 content: const Text(
                                     "This will deactivate your account"),
                                 actions: [
                                   GFButton(
                                     text: "Cancel",
+                                    color: GFColors.WHITE,
+                                    textColor: GFColors.DARK,
                                     onPressed: () => Navigator.pop(context),
                                   ),
                                   GFButton(
                                     text: "Deactivate",
+                                    color: GFColors.DANGER,
                                     onPressed: () async {
                                       FirebaseFirestore.instance
                                           .collection("users")
                                           .doc(user?.uid)
                                           .delete();
                                       await FirebaseAuth.instance.currentUser
-                                          ?.delete();
+                                          ?.delete()
+                                          .then((value) =>
+                                              Fluttertoast.showToast(
+                                                  msg: 'Account Deactivated'));
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  LoginPage()));
+                                                  const LoginPage()));
                                     },
                                   ),
                                 ],

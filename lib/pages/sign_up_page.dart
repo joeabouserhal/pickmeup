@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pickmeup/pages/main_page.dart';
 
 import '../widgets/sign_in_button.dart';
@@ -264,10 +265,13 @@ class _SignUpPageState extends State<SignUpPage> {
                                         _phoneNumberTextController.text,
                                     'email': _emailTextController.text,
                                   }),
+                                  Fluttertoast.showToast(
+                                      msg: 'Successfully Signed Up'),
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: ((context) => MainPage()))),
+                                          builder: ((context) =>
+                                              const MainPage()))),
                                 });
                       }
                     }),
