@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pickmeup/pages/about_us.dart';
 import 'package:pickmeup/pages/contact_us.dart';
 import 'package:pickmeup/pages/login_page.dart';
@@ -340,6 +341,13 @@ _rideLocationPicker(context) {
                       .set({
                     'ordered_by': FirebaseAuth.instance.currentUser?.uid,
                     'is_completed': false,
+                    'location': firestore.GeoPoint(
+                        rideLocation.latitude, rideLocation.longitude),
+                    'destination': firestore.GeoPoint(
+                        rideDestination.latitude, rideDestination.longitude),
+                  }).then((value) {
+                    Fluttertoast.showToast(msg: 'Ride Ordered');
+                    Navigator.pop(context);
                   });
                 },
               ),
@@ -423,7 +431,21 @@ _deliveryLocationPicker(context) {
                   style: TextStyle(color: Colors.cyan),
                 ),
                 color: Colors.white,
-                onPressed: () {},
+                onPressed: () {
+                  firestore.FirebaseFirestore.instance
+                      .collection('deliveries')
+                      .doc()
+                      .set({
+                    'ordered_by': FirebaseAuth.instance.currentUser?.uid,
+                    'is_completed': false,
+                    'location': firestore.GeoPoint(
+                        deliveryLocation.latitude, deliveryLocation.longitude),
+                    'description': deliverDescriptionController.text,
+                  }).then((value) {
+                    Fluttertoast.showToast(msg: 'Delivery Ordered');
+                    Navigator.pop(context);
+                  });
+                },
               ),
             ],
           )
