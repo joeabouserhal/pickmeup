@@ -233,9 +233,9 @@ class _DriverSignUpPageState extends State<DriverSignUpPage> {
                           return '  Please enter your password';
                         }
                         if (!RegExp(
-                                r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~-]).{8,}$')
+                                r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$')
                             .hasMatch(value)) {
-                          return '  Invalid Password, must contain:\n  * at least 1 capital letter\n  * at least 1 lowercase letter\n  * at least 1 number\n  * at least 1 special character\n  * at least 8 characters long';
+                          return '  Invalid Password, must contain:\n  * at least 1 capital letter\n  * at least 1 lowercase letter\n  * at least 1 number\n  * at least 8 characters long';
                         }
                         return null;
                       },
