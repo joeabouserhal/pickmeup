@@ -217,17 +217,21 @@ class _MainPageState extends State<MainPage> {
         backgroundColor: Colors.transparent,
         context: context,
         builder: (context) {
-          return Container(
-              decoration: BoxDecoration(
-                  color: Colors.grey[200],
-                  borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(20),
-                      topRight: Radius.circular(20))),
-              child: (option == 'Delivery')
-                  //if true
-                  ? _deliveryLocationPicker(context)
-                  // if false
-                  : _rideLocationPicker(context));
+          return Padding(
+            padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom),
+            child: Container(
+                decoration: BoxDecoration(
+                    color: Colors.grey[200],
+                    borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(20),
+                        topRight: Radius.circular(20))),
+                child: (option == 'Delivery')
+                    //if true
+                    ? _deliveryLocationPicker(context)
+                    // if false
+                    : _rideLocationPicker(context)),
+          );
         });
   }
 
