@@ -262,6 +262,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                     'last_name': _lastNameTextController.text,
                                     'phone_number':
                                         _phoneNumberTextController.text,
+                                    'email': _emailTextController.text,
                                   }),
                                   Navigator.push(
                                       context,

@@ -293,6 +293,7 @@ class _DriverSignUpPageState extends State<DriverSignUpPage> {
                                         _licenseNumberTextController.text,
                                     'phone_number':
                                         _phoneNumberTextController.text,
+                                    'email': _emailTextController.text,
                                   }),
                                   Navigator.push(
                                       context,

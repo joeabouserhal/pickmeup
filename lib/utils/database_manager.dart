@@ -17,8 +17,9 @@ class DatabaseManager {
     return a['phone_number'];
   }
 
-  Future<bool> isCustomer(uid) async {
-    var a = await FirebaseFirestore.instance.collection('users').doc(uid).get();
+  Future<bool> isCustomer(email) async {
+    var a =
+        await FirebaseFirestore.instance.collection('users').doc(email).get();
     return a.exists;
   }
 
