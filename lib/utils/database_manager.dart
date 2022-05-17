@@ -16,9 +16,4 @@ class DatabaseManager {
     var a = await FirebaseFirestore.instance.collection('users').doc(uid).get();
     return a['phone_number'];
   }
-
-  Future<bool> isDriver(uid) async {
-    var a = await FirebaseFirestore.instance.collection('drivers').snapshots();
-    return a.contains(uid);
-  }
 }
