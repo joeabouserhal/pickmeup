@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pickmeup/pages/driver_main_page.dart';
-import 'package:pickmeup/pages/main_page.dart';
 
 import '../widgets/sign_in_button.dart';
 

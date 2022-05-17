@@ -173,7 +173,8 @@ class _DriverMainPageState extends State<DriverMainPage> {
                 borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(20),
                     topRight: Radius.circular(20))),
-            child: Padding(padding: EdgeInsets.all(25), child: Text("Test")),
+            child:
+                const Padding(padding: EdgeInsets.all(25), child: Text("Test")),
           );
         });
   }

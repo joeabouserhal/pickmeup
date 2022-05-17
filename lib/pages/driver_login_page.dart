@@ -1,9 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:pickmeup/models/customer.dart';
 import 'package:pickmeup/pages/driver_login_email_page.dart';
-import 'package:pickmeup/pages/driver_main_page.dart';
 import 'package:pickmeup/pages/driver_sign_up_page.dart';
 import 'package:pickmeup/pages/main_page.dart';
 
@@ -68,7 +66,8 @@ class DriverLoginPage extends StatelessWidget {
                     .signInAnonymously()
                     .then((value) => Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => MainPage()),
+                          MaterialPageRoute(
+                              builder: (context) => const MainPage()),
                         ));
               }),
           const Padding(

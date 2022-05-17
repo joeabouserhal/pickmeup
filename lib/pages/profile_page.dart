@@ -1,9 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:getwidget/colors/gf_color.dart';
-import 'package:getwidget/components/button/gf_button.dart';
-import 'package:getwidget/components/list_tile/gf_list_tile.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:pickmeup/pages/login_page.dart';
 import 'package:pickmeup/utils/database_manager.dart';
@@ -46,7 +43,6 @@ class ProfilePage extends StatelessWidget {
                       description: Text(snapshot.data.toString()),
                       icon: const Icon(Icons.person),
                     );
-                    ;
                   },
                 ),
                 GFListTile(

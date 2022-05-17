@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:pickmeup/widgets/common_elevated_button.dart';
 
+// ignore: must_be_immutable
 class SignInButton extends CustomElevatedButton {
   SignInButton({
     required String text,

@@ -63,7 +63,8 @@ class LoginPage extends StatelessWidget {
                     .signInAnonymously()
                     .then((value) => Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => MainPage()),
+                          MaterialPageRoute(
+                              builder: (context) => const MainPage()),
                         ));
               }),
           const Padding(
@@ -78,7 +79,6 @@ class LoginPage extends StatelessWidget {
               color: const Color.fromARGB(255, 181, 189, 194),
               textColor: Colors.black87,
               onPressed: () {
-                _signUp;
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => const SignUpPage()),
@@ -102,13 +102,5 @@ class LoginPage extends StatelessWidget {
         ],
       )),
     );
-  }
-
-  void _signInAsGuest() {
-    print('sign in as guest');
-  }
-
-  void _signUp() {
-    print('sign up');
   }
 }
