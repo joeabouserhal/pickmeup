@@ -4,6 +4,7 @@ import 'package:getwidget/colors/gf_color.dart';
 import 'package:getwidget/components/button/gf_button.dart';
 import 'package:getwidget/components/list_tile/gf_list_tile.dart';
 import 'package:getwidget/getwidget.dart';
+import 'package:pickmeup/pages/login_page.dart';
 import 'package:pickmeup/utils/database_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -69,14 +70,37 @@ class ProfilePage extends StatelessWidget {
                       text: 'Deactivate Account',
                       color: GFColors.DANGER,
                       onPressed: () async {
-                        await FirebaseAuth.instance.currentUser?.delete();
-                        FirebaseFirestore.instance
-                            .collection("users")
-                            .doc(user?.uid)
-                            .delete()
-                            .then((value) {
-                          FirebaseAuth.instance.signOut();
-                        });
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                title: const Text("Are you sure?"),
+                                content: const Text(
+                                    "This will deactivate your account"),
+                                actions: [
+                                  GFButton(
+                                    text: "Cancel",
+                                    onPressed: () => Navigator.pop(context),
+                                  ),
+                                  GFButton(
+                                    text: "Deactivate",
+                                    onPressed: () async {
+                                      FirebaseFirestore.instance
+                                          .collection("users")
+                                          .doc(user?.uid)
+                                          .delete();
+                                      await FirebaseAuth.instance.currentUser
+                                          ?.delete();
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  LoginPage()));
+                                    },
+                                  ),
+                                ],
+                              );
+                            });
                       }),
                 )
               ],
