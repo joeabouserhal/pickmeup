@@ -17,15 +17,8 @@ class DatabaseManager {
     return a['phone_number'];
   }
 
-  Future<bool> isCustomer(email) async {
-    var a =
-        await FirebaseFirestore.instance.collection('users').doc(email).get();
-    return a.exists;
-  }
-
   Future<bool> isDriver(uid) async {
-    var a =
-        await FirebaseFirestore.instance.collection('drivers').doc(uid).get();
-    return a.exists;
+    var a = await FirebaseFirestore.instance.collection('drivers').snapshots();
+    return a.contains(uid);
   }
 }

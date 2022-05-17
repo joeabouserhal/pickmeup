@@ -1,5 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:getwidget/colors/gf_color.dart';
+import 'package:getwidget/components/button/gf_button.dart';
 import 'package:getwidget/components/list_tile/gf_list_tile.dart';
+import 'package:getwidget/getwidget.dart';
 import 'package:pickmeup/utils/database_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -37,8 +41,8 @@ class ProfilePage extends StatelessWidget {
                   builder: (context, snapshot) {
                     return GFListTile(
                       titleText: "Name",
-                      description: Text("${snapshot.data.toString()}"),
-                      icon: Icon(Icons.person),
+                      description: Text(snapshot.data.toString()),
+                      icon: const Icon(Icons.person),
                     );
                     ;
                   },
@@ -46,18 +50,35 @@ class ProfilePage extends StatelessWidget {
                 GFListTile(
                   titleText: "Email",
                   description: Text("${user?.email}"),
-                  icon: Icon(Icons.mail),
+                  icon: const Icon(Icons.mail),
                 ),
                 FutureBuilder(
                   future: DatabaseManager().getPhoneNumber(user?.uid),
                   builder: (context, snapshot) {
                     return GFListTile(
                       titleText: "Phone Number",
-                      description: Text("${snapshot.data.toString()}"),
-                      icon: Icon(Icons.phone),
+                      description: Text(snapshot.data.toString()),
+                      icon: const Icon(Icons.phone),
                     );
                   },
                 ),
+                const SizedBox(height: 80),
+                Center(
+                  child: GFButton(
+                      shape: GFButtonShape.pills,
+                      text: 'Deactivate Account',
+                      color: GFColors.DANGER,
+                      onPressed: () async {
+                        await FirebaseAuth.instance.currentUser?.delete();
+                        FirebaseFirestore.instance
+                            .collection("users")
+                            .doc(user?.uid)
+                            .delete()
+                            .then((value) {
+                          FirebaseAuth.instance.signOut();
+                        });
+                      }),
+                )
               ],
             )));
   }
