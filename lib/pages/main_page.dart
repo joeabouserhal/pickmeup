@@ -7,8 +7,10 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pickmeup/pages/about_us.dart';
 import 'package:pickmeup/pages/contact_us.dart';
+import 'package:pickmeup/pages/deliveries_history.dart';
 import 'package:pickmeup/pages/login_page.dart';
 import 'package:pickmeup/pages/profile_page.dart';
+import 'package:pickmeup/pages/rides_history.dart';
 import 'package:pickmeup/utils/database_manager.dart';
 import 'package:pickmeup/widgets/common_elevated_button.dart';
 
@@ -65,7 +67,62 @@ class _MainPageState extends State<MainPage> {
               child: GestureDetector(
                   child: const Icon(Icons.history_rounded),
                   onTap: () {
-                    _openOrderHistorySheet();
+                    showModalBottomSheet(
+                        isScrollControlled: true,
+                        backgroundColor: Colors.transparent,
+                        context: context,
+                        builder: (context) {
+                          return Padding(
+                              padding: EdgeInsets.only(
+                                  bottom:
+                                      MediaQuery.of(context).viewInsets.bottom),
+                              child: Container(
+                                  decoration: BoxDecoration(
+                                      color: Colors.grey[200],
+                                      borderRadius: const BorderRadius.only(
+                                          topLeft: Radius.circular(20),
+                                          topRight: Radius.circular(20))),
+                                  child: Flexible(
+                                      child: Padding(
+                                          padding: const EdgeInsets.all(25.0),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.stretch,
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              CustomElevatedButton(
+                                                child: const Text(
+                                                  "Rides History",
+                                                  style: TextStyle(
+                                                      color: Colors.white),
+                                                ),
+                                                onPressed: () {
+                                                  Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              const RidesHistory()));
+                                                },
+                                              ),
+                                              const Padding(
+                                                  padding: EdgeInsets.all(5)),
+                                              CustomElevatedButton(
+                                                child: const Text(
+                                                  "Deliveries History",
+                                                  style: TextStyle(
+                                                      color: Colors.white),
+                                                ),
+                                                onPressed: () {
+                                                  Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              const DeliveriesHistory()));
+                                                },
+                                              ),
+                                            ],
+                                          )))));
+                        });
                   }),
             )
           ],
@@ -231,26 +288,6 @@ class _MainPageState extends State<MainPage> {
                     ? _deliveryLocationPicker(context)
                     // if false
                     : _rideLocationPicker(context)),
-          );
-        });
-  }
-
-  void _openOrderHistorySheet() {
-    showModalBottomSheet(
-        isScrollControlled: true,
-        backgroundColor: Colors.transparent,
-        context: context,
-        builder: (context) {
-          return Container(
-            decoration: BoxDecoration(
-                color: Colors.grey[200],
-                borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(20),
-                    topRight: Radius.circular(20))),
-            child: const Padding(
-              padding: EdgeInsets.all(25),
-              child: Text("Test"),
-            ),
           );
         });
   }
