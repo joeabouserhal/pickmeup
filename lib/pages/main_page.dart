@@ -120,6 +120,17 @@ class _MainPageState extends State<MainPage> {
                                                               const DeliveriesHistory()));
                                                 },
                                               ),
+                                              const Padding(
+                                                  padding: EdgeInsets.all(5)),
+                                              CustomElevatedButton(
+                                                color: Colors.white,
+                                                child: const Text(
+                                                  "Close",
+                                                ),
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                },
+                                              ),
                                             ],
                                           )))));
                         });

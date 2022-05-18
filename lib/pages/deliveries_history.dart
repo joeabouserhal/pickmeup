@@ -17,7 +17,7 @@ class DeliveriesHistory extends StatelessWidget {
             statusBarIconBrightness: Brightness.light),
         foregroundColor: Colors.white,
         centerTitle: true,
-        title: Text(
+        title: const Text(
           "Deliveries History",
         ),
         elevation: 3,
