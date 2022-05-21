@@ -7,6 +7,8 @@ import 'package:pickmeup/pages/main_page.dart';
 
 import 'package:pickmeup/widgets/sign_in_button.dart';
 
+import 'driver_main_page.dart';
+
 bool _isObscure = true;
 
 class DriverLoginEmailPage extends StatefulWidget {
@@ -94,11 +96,6 @@ class _DriverLoginEmailPageState extends State<DriverLoginEmailPage> {
                       if (value == null || value.isEmpty) {
                         return '  Please enter your password';
                       }
-                      if (!RegExp(
-                              r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$')
-                          .hasMatch(value)) {
-                        return '  Invalid Password';
-                      }
                       return null;
                     },
                     keyboardType: TextInputType.visiblePassword,
@@ -156,7 +153,8 @@ class _DriverLoginEmailPageState extends State<DriverLoginEmailPage> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => const MainPage()))
+                                        builder: (context) =>
+                                            const DriverMainPage()))
                               })
                           .onError((error, stackTrace) {
                         Fluttertoast.showToast(msg: 'Error: $error');
