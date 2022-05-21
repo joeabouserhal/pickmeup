@@ -486,7 +486,7 @@ class _MainPageState extends State<MainPage> {
                                                 borderRadius: BorderRadius.all(
                                                     Radius.circular(8))),
                                             title: const Text(
-                                                "Do you want to cancel and delete this ride?"),
+                                                "Do you want to cancel and delete this delivery?"),
                                             actions: [
                                               GFButton(
                                                 text: "Cancel",
@@ -501,7 +501,7 @@ class _MainPageState extends State<MainPage> {
                                                 onPressed: () {
                                                   firestore.FirebaseFirestore
                                                       .instance
-                                                      .collection('rides')
+                                                      .collection('deliveries')
                                                       .doc(snapshot
                                                           .data?.docs[index].id)
                                                       .delete();
