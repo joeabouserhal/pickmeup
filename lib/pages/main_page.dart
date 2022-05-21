@@ -5,12 +5,13 @@ import 'package:flutter/services.dart';
 import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:getwidget/colors/gf_color.dart';
+import 'package:getwidget/components/button/gf_button.dart';
+import 'package:getwidget/components/list_tile/gf_list_tile.dart';
 import 'package:pickmeup/pages/about_us.dart';
 import 'package:pickmeup/pages/contact_us.dart';
-import 'package:pickmeup/pages/deliveries_history.dart';
 import 'package:pickmeup/pages/login_page.dart';
 import 'package:pickmeup/pages/profile_page.dart';
-import 'package:pickmeup/pages/rides_history.dart';
 import 'package:pickmeup/utils/database_manager.dart';
 import 'package:pickmeup/widgets/common_elevated_button.dart';
 
@@ -20,7 +21,7 @@ GeoPoint deliveryLocation = const firestore.GeoPoint(0, 0) as GeoPoint;
 
 TextEditingController deliverDescriptionController = TextEditingController();
 
-String name = "";
+final user = FirebaseAuth.instance.currentUser;
 
 class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);
@@ -38,7 +39,6 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
-    final uid = FirebaseAuth.instance.currentUser?.uid;
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
@@ -97,11 +97,7 @@ class _MainPageState extends State<MainPage> {
                                                       color: Colors.white),
                                                 ),
                                                 onPressed: () {
-                                                  Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              const RidesHistory()));
+                                                  _ridesModalSheet();
                                                 },
                                               ),
                                               const Padding(
@@ -113,11 +109,7 @@ class _MainPageState extends State<MainPage> {
                                                       color: Colors.white),
                                                 ),
                                                 onPressed: () {
-                                                  Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              const DeliveriesHistory()));
+                                                  _deliveriesModalSheet();
                                                 },
                                               ),
                                               const Padding(
@@ -156,7 +148,7 @@ class _MainPageState extends State<MainPage> {
                   height: 10,
                 ),
                 FutureBuilder(
-                  future: DatabaseManager().getFullName(uid),
+                  future: DatabaseManager().getFullName(user?.uid),
                   builder: (context, snapshot) {
                     return Text(
                       snapshot.data.toString(),
@@ -303,6 +295,234 @@ class _MainPageState extends State<MainPage> {
         });
   }
 
+  void _ridesModalSheet() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return SimpleDialog(
+            title: const Text("Rides"),
+            children: [
+              StreamBuilder(
+                  stream: firestore.FirebaseFirestore.instance
+                      .collection('rides')
+                      .where('ordered_by', isEqualTo: user?.uid)
+                      .snapshots(),
+                  builder: (context,
+                      AsyncSnapshot<firestore.QuerySnapshot> snapshot) {
+                    if (!snapshot.hasData) {
+                      return const Padding(
+                        padding: EdgeInsets.all(50),
+                        child: Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                      );
+                    }
+                    return SingleChildScrollView(
+                      child: Expanded(
+                        child: SizedBox(
+                          height: MediaQuery.of(context).size.height,
+                          child: ListView.builder(
+                              itemCount: snapshot.data?.docs.length,
+                              itemBuilder: (context, index) {
+                                return GFListTile(
+                                  color: Colors.grey[200],
+                                  icon: const Icon(Icons.local_taxi_rounded),
+                                  description: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const Text(
+                                        "Location:",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w600),
+                                      ),
+                                      Text(
+                                          "${snapshot.data?.docs[index]['location'].latitude.toString()}\n${snapshot.data?.docs[index]['location'].longitude.toString()}"),
+                                      const Text(
+                                        "Destination:",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w600),
+                                      ),
+                                      Text(
+                                          "${snapshot.data?.docs[index]['destination'].latitude.toString()}\n${snapshot.data?.docs[index]['destination'].longitude.toString()}"),
+                                      Row(
+                                        children: [
+                                          const Text(
+                                            "Is Completed: ",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w600),
+                                          ),
+                                          Text(
+                                              "${snapshot.data?.docs[index]['is_completed'].toString()}")
+                                        ],
+                                      ),
+                                      const Text(
+                                        "Date Ordered:",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w600),
+                                      ),
+                                      Text(
+                                          "${snapshot.data?.docs[index]['date_ordered'].toDate().toString()}"),
+                                    ],
+                                  ),
+                                  onTap: () async {
+                                    showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return AlertDialog(
+                                            shape: const RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(8))),
+                                            title: const Text(
+                                                "Do you want to cancel and delete this ride?"),
+                                            actions: [
+                                              GFButton(
+                                                text: "Cancel",
+                                                color: GFColors.WHITE,
+                                                textColor: GFColors.DARK,
+                                                onPressed: () =>
+                                                    Navigator.pop(context),
+                                              ),
+                                              GFButton(
+                                                text: "Delete",
+                                                color: GFColors.DANGER,
+                                                onPressed: () {
+                                                  firestore.FirebaseFirestore
+                                                      .instance
+                                                      .collection('rides')
+                                                      .doc(snapshot
+                                                          .data?.docs[index].id)
+                                                      .delete();
+                                                  Navigator.pop(context);
+                                                },
+                                              ),
+                                            ],
+                                          );
+                                        });
+                                  },
+                                );
+                              }),
+                        ),
+                      ),
+                    );
+                  })
+            ],
+          );
+        });
+  }
+
+  void _deliveriesModalSheet() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return SimpleDialog(
+            title: const Text("Deliveries"),
+            children: [
+              StreamBuilder(
+                  stream: firestore.FirebaseFirestore.instance
+                      .collection('deliveries')
+                      .where('ordered_by', isEqualTo: user?.uid)
+                      .snapshots(),
+                  builder: (context,
+                      AsyncSnapshot<firestore.QuerySnapshot> snapshot) {
+                    if (!snapshot.hasData) {
+                      return const Padding(
+                        padding: EdgeInsets.all(50),
+                        child: Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                      );
+                    }
+                    return SingleChildScrollView(
+                      child: Expanded(
+                        child: SizedBox(
+                          height: MediaQuery.of(context).size.height,
+                          child: ListView.builder(
+                              itemCount: snapshot.data?.docs.length,
+                              itemBuilder: (context, index) {
+                                return GFListTile(
+                                  color: Colors.grey[200],
+                                  icon:
+                                      const Icon(Icons.delivery_dining_rounded),
+                                  description: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const Text(
+                                        "Location:",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w600),
+                                      ),
+                                      Text(
+                                          "${snapshot.data?.docs[index]['location'].latitude.toString()}\n${snapshot.data?.docs[index]['location'].longitude.toString()}"),
+                                      const Text(
+                                        "Description:",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w600),
+                                      ),
+                                      Text(
+                                          "${snapshot.data?.docs[index]['description'].toString()}"),
+                                      Row(
+                                        children: [
+                                          const Text(
+                                            "Is Completed: ",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w600),
+                                          ),
+                                          Text(
+                                              "${snapshot.data?.docs[index]['is_completed'].toString()}")
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                  onTap: () async {
+                                    showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return AlertDialog(
+                                            shape: const RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(8))),
+                                            title: const Text(
+                                                "Do you want to cancel and delete this ride?"),
+                                            actions: [
+                                              GFButton(
+                                                text: "Cancel",
+                                                color: GFColors.WHITE,
+                                                textColor: GFColors.DARK,
+                                                onPressed: () =>
+                                                    Navigator.pop(context),
+                                              ),
+                                              GFButton(
+                                                text: "Delete",
+                                                color: GFColors.DANGER,
+                                                onPressed: () {
+                                                  firestore.FirebaseFirestore
+                                                      .instance
+                                                      .collection('rides')
+                                                      .doc(snapshot
+                                                          .data?.docs[index].id)
+                                                      .delete();
+                                                  Navigator.pop(context);
+                                                },
+                                              ),
+                                            ],
+                                          );
+                                        });
+                                  },
+                                );
+                              }),
+                        ),
+                      ),
+                    );
+                  })
+            ],
+          );
+        });
+  }
+
   // returns camera to original location
   void _returnToCurrentLocation() async {
     await mapController.currentLocation();
@@ -397,6 +617,7 @@ _rideLocationPicker(context) {
                         rideLocation.latitude, rideLocation.longitude),
                     'destination': firestore.GeoPoint(
                         rideDestination.latitude, rideDestination.longitude),
+                    'date_ordered': firestore.Timestamp.now(),
                   }).then((value) {
                     Fluttertoast.showToast(msg: 'Ride Ordered');
                     Navigator.pop(context);
@@ -493,6 +714,7 @@ _deliveryLocationPicker(context) {
                     'location': firestore.GeoPoint(
                         deliveryLocation.latitude, deliveryLocation.longitude),
                     'description': deliverDescriptionController.text,
+                    'date_ordered': firestore.Timestamp.now(),
                   }).then((value) {
                     Fluttertoast.showToast(msg: 'Delivery Ordered');
                     Navigator.pop(context);
