@@ -320,7 +320,7 @@ class _DriverMainPageState extends State<DriverMainPage> {
                                                 borderRadius: BorderRadius.all(
                                                     Radius.circular(8))),
                                             title: const Text(
-                                                "Do you want to cancel and delete this ride?"),
+                                                "Do you want take this order?"),
                                             actions: [
                                               GFButton(
                                                 text: "Cancel",
@@ -330,7 +330,7 @@ class _DriverMainPageState extends State<DriverMainPage> {
                                                     Navigator.pop(context),
                                               ),
                                               GFButton(
-                                                text: "Delete",
+                                                text: "T",
                                                 color: GFColors.DANGER,
                                                 onPressed: () {
                                                   firestore.FirebaseFirestore
@@ -466,7 +466,7 @@ class _DriverMainPageState extends State<DriverMainPage> {
                                                 onPressed: () {
                                                   firestore.FirebaseFirestore
                                                       .instance
-                                                      .collection('rides')
+                                                      .collection('deliveries')
                                                       .doc(snapshot
                                                           .data?.docs[index].id)
                                                       .delete();
