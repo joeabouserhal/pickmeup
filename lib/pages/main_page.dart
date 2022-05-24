@@ -42,6 +42,7 @@ class _MainPageState extends State<MainPage> {
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         appBar: AppBar(
           systemOverlayStyle: const SystemUiOverlayStyle(
               statusBarColor: Colors.transparent,
@@ -715,6 +716,8 @@ _deliveryLocationPicker(context) {
                         deliveryLocation.latitude, deliveryLocation.longitude),
                     'description': deliverDescriptionController.text,
                     'date_ordered': firestore.Timestamp.now(),
+                    'in_progress': false,
+                    'taken_by': "",
                   }).then((value) {
                     Fluttertoast.showToast(msg: 'Delivery Ordered');
                     Navigator.pop(context);

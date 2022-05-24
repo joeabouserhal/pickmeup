@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:getwidget/colors/gf_color.dart';
 import 'package:getwidget/components/button/gf_button.dart';
 import 'package:getwidget/components/list_tile/gf_list_tile.dart';
@@ -30,12 +31,16 @@ class _DriverMainPageState extends State<DriverMainPage> {
     // center to lebanon by default
     initPosition: GeoPoint(latitude: 33.8547, longitude: 35.8623),
   );
+  // order variables:
+  bool isTakingOrder = false;
+  var orderDeliveryLocation;
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         appBar: AppBar(
           systemOverlayStyle: const SystemUiOverlayStyle(
               statusBarColor: Colors.transparent,
@@ -139,6 +144,20 @@ class _DriverMainPageState extends State<DriverMainPage> {
         ),
         floatingActionButton:
             Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+          Visibility(
+            visible: isTakingOrder,
+            child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  elevation: 3,
+                  shape: const CircleBorder(),
+                  padding: const EdgeInsets.all(15), // <-- Splash color
+                ),
+                child:
+                    const Icon(Icons.local_taxi_rounded, color: Colors.white),
+                onPressed: () {
+                  openCurrentOrderSetting();
+                }),
+          ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
               elevation: 3,
@@ -225,7 +244,14 @@ class _DriverMainPageState extends State<DriverMainPage> {
         context: context,
         builder: (context) {
           return SimpleDialog(
-            title: const Text("Rides"),
+            title: Row(
+              children: [
+                const Text("Rides"),
+                IconButton(
+                    icon: const Icon(Icons.close),
+                    onPressed: () => Navigator.pop(context)),
+              ],
+            ),
             children: [
               StreamBuilder(
                   stream: firestore.FirebaseFirestore.instance
@@ -330,16 +356,49 @@ class _DriverMainPageState extends State<DriverMainPage> {
                                                     Navigator.pop(context),
                                               ),
                                               GFButton(
-                                                text: "T",
-                                                color: GFColors.DANGER,
+                                                text: "Take",
                                                 onPressed: () {
-                                                  firestore.FirebaseFirestore
-                                                      .instance
-                                                      .collection('rides')
-                                                      .doc(snapshot
-                                                          .data?.docs[index].id)
-                                                      .delete();
-                                                  Navigator.pop(context);
+                                                  if (isTakingOrder == false) {
+                                                    mapController.drawRoad(
+                                                        GeoPoint(
+                                                            latitude: snapshot
+                                                                .data
+                                                                ?.docs[index]
+                                                                    ['location']
+                                                                .latitude,
+                                                            longitude: snapshot
+                                                                .data
+                                                                ?.docs[index]
+                                                                    ['location']
+                                                                .longitude),
+                                                        GeoPoint(
+                                                            latitude: snapshot
+                                                                .data
+                                                                ?.docs[index][
+                                                                    'destination']
+                                                                .latitude,
+                                                            longitude: snapshot
+                                                                .data
+                                                                ?.docs[index][
+                                                                    'destination']
+                                                                .longitude));
+                                                    firestore.FirebaseFirestore
+                                                        .instance
+                                                        .collection('rides')
+                                                        .doc(snapshot.data
+                                                            ?.docs[index].id)
+                                                        .update({
+                                                      'in_progress': true,
+                                                      'taken_by': user?.uid
+                                                    });
+                                                    setState(() =>
+                                                        isTakingOrder = true);
+                                                    Navigator.pop(context);
+                                                  } else {
+                                                    Fluttertoast.showToast(
+                                                        msg:
+                                                            "Sorry, you are already taking an order, please cancel the current one to accept another");
+                                                  }
                                                 },
                                               ),
                                             ],
@@ -362,7 +421,14 @@ class _DriverMainPageState extends State<DriverMainPage> {
         context: context,
         builder: (context) {
           return SimpleDialog(
-            title: const Text("Deliveries"),
+            title: Row(
+              children: [
+                const Text("Deliveries"),
+                IconButton(
+                    icon: const Icon(Icons.close),
+                    onPressed: () => Navigator.pop(context)),
+              ],
+            ),
             children: [
               StreamBuilder(
                   stream: firestore.FirebaseFirestore.instance
@@ -451,7 +517,7 @@ class _DriverMainPageState extends State<DriverMainPage> {
                                                 borderRadius: BorderRadius.all(
                                                     Radius.circular(8))),
                                             title: const Text(
-                                                "Do you want to cancel and delete this ride?"),
+                                                "Do you want to take this ride?"),
                                             actions: [
                                               GFButton(
                                                 text: "Cancel",
@@ -461,16 +527,50 @@ class _DriverMainPageState extends State<DriverMainPage> {
                                                     Navigator.pop(context),
                                               ),
                                               GFButton(
-                                                text: "Delete",
-                                                color: GFColors.DANGER,
+                                                text: "Take",
                                                 onPressed: () {
-                                                  firestore.FirebaseFirestore
-                                                      .instance
-                                                      .collection('deliveries')
-                                                      .doc(snapshot
-                                                          .data?.docs[index].id)
-                                                      .delete();
-                                                  Navigator.pop(context);
+                                                  if (isTakingOrder == false) {
+                                                    mapController.addMarker(
+                                                        orderDeliveryLocation = GeoPoint(
+                                                            latitude: snapshot
+                                                                .data
+                                                                ?.docs[index]
+                                                                    ['location']
+                                                                .latitude,
+                                                            longitude: snapshot
+                                                                .data
+                                                                ?.docs[index]
+                                                                    ['location']
+                                                                .longitude));
+                                                    GeoPoint(
+                                                        latitude: snapshot
+                                                            .data
+                                                            ?.docs[index]
+                                                                ['location']
+                                                            .latitude,
+                                                        longitude: snapshot
+                                                            .data
+                                                            ?.docs[index]
+                                                                ['location']
+                                                            .longitude);
+                                                    firestore.FirebaseFirestore
+                                                        .instance
+                                                        .collection(
+                                                            'deliveries')
+                                                        .doc(snapshot.data
+                                                            ?.docs[index].id)
+                                                        .update({
+                                                      'in_progress': true,
+                                                      'taken_by': user?.uid
+                                                    });
+                                                    setState(() =>
+                                                        isTakingOrder = true);
+                                                    Navigator.pop(context);
+                                                  } else {
+                                                    Fluttertoast.showToast(
+                                                        msg:
+                                                            "Sorry, you are already taking an order, please cancel the current one to accept another");
+                                                  }
                                                 },
                                               ),
                                             ],
@@ -495,4 +595,30 @@ class _DriverMainPageState extends State<DriverMainPage> {
       await mapController.setZoom(zoomLevel: 15);
     }
   }
+
+  void _cleanMap() {
+    mapController.clearAllRoads();
+    if (orderDeliveryLocation != null) {
+      orderDeliveryLocation = null;
+    }
+  }
+
+  void openCurrentOrderSetting() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return SimpleDialog(
+            title: Row(
+              children: [
+                const Text("Order Settings"),
+                IconButton(
+                    icon: const Icon(Icons.close),
+                    onPressed: () => Navigator.pop(context)),
+              ],
+            ),
+          );
+        });
+  }
+
+  void _initialize() {}
 }
