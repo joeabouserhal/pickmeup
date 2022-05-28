@@ -16,4 +16,10 @@ class DatabaseManager {
     var a = await FirebaseFirestore.instance.collection('users').doc(uid).get();
     return a['phone_number'];
   }
+
+  Stream<QuerySnapshot<Map<String, dynamic>>> getAllRides() =>
+      FirebaseFirestore.instance.collection('rides').snapshots();
+
+  Stream<QuerySnapshot<Map<String, dynamic>>> getAllDeliveries() =>
+      FirebaseFirestore.instance.collection('deliveries').snapshots();
 }

@@ -49,6 +49,7 @@ dependencies:
   cloud_firestore: ^3.1.15
   flutter_osm_plugin: ^0.34.0+1
   getwidget: ^2.0.5
+  url_launcher: ^6.1.2
 
 dev_dependencies:
   flutter_test:
@@ -75,6 +76,4 @@ flutter:
   uses-material-design: true
 
   assets:
-    - images/facebook-logo.png
-    - images/google-logo.png
     - images/app-icon-splash.png

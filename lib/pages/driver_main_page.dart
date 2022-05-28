@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart' as firestore;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +15,7 @@ import 'package:pickmeup/pages/contact_us.dart';
 import 'package:pickmeup/pages/login_page.dart';
 import 'package:pickmeup/utils/database_manager.dart';
 import 'package:pickmeup/widgets/common_elevated_button.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class DriverMainPage extends StatefulWidget {
   const DriverMainPage({Key? key}) : super(key: key);
@@ -34,6 +37,8 @@ class _DriverMainPageState extends State<DriverMainPage> {
   // order variables:
   bool isTakingOrder = false;
   var orderDeliveryLocation;
+  var currentOrderCustomerPhone;
+  var CurrentClientId;
 
   @override
   Widget build(BuildContext context) {
@@ -144,20 +149,20 @@ class _DriverMainPageState extends State<DriverMainPage> {
         ),
         floatingActionButton:
             Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-          Visibility(
-            visible: isTakingOrder,
-            child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  elevation: 3,
-                  shape: const CircleBorder(),
-                  padding: const EdgeInsets.all(15), // <-- Splash color
-                ),
-                child:
-                    const Icon(Icons.local_taxi_rounded, color: Colors.white),
-                onPressed: () {
+          ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                elevation: 3,
+                shape: const CircleBorder(),
+                padding: const EdgeInsets.all(15), // <-- Splash color
+              ),
+              child: const Icon(Icons.local_taxi_rounded, color: Colors.white),
+              onPressed: () {
+                if (!isTakingOrder) {
+                  Fluttertoast.showToast(msg: 'No order is being taken');
+                } else {
                   openCurrentOrderSetting();
-                }),
-          ),
+                }
+              }),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
               elevation: 3,
@@ -245,6 +250,7 @@ class _DriverMainPageState extends State<DriverMainPage> {
         builder: (context) {
           return SimpleDialog(
             title: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text("Rides"),
                 IconButton(
@@ -254,9 +260,7 @@ class _DriverMainPageState extends State<DriverMainPage> {
             ),
             children: [
               StreamBuilder(
-                  stream: firestore.FirebaseFirestore.instance
-                      .collection('rides')
-                      .snapshots(),
+                  stream: DatabaseManager().getAllRides(),
                   builder: (context,
                       AsyncSnapshot<firestore.QuerySnapshot> snapshot) {
                     if (!snapshot.hasData) {
@@ -359,6 +363,8 @@ class _DriverMainPageState extends State<DriverMainPage> {
                                                 text: "Take",
                                                 onPressed: () {
                                                   if (isTakingOrder == false) {
+                                                    setState(() =>
+                                                        isTakingOrder = true);
                                                     mapController.drawRoad(
                                                         GeoPoint(
                                                             latitude: snapshot
@@ -391,8 +397,13 @@ class _DriverMainPageState extends State<DriverMainPage> {
                                                       'in_progress': true,
                                                       'taken_by': user?.uid
                                                     });
-                                                    setState(() =>
-                                                        isTakingOrder = true);
+                                                    setState(() {
+                                                      CurrentClientId = snapshot
+                                                          .data
+                                                          ?.docs[index]
+                                                              ['ordered_by']
+                                                          .toString();
+                                                    });
                                                     Navigator.pop(context);
                                                   } else {
                                                     Fluttertoast.showToast(
@@ -422,6 +433,7 @@ class _DriverMainPageState extends State<DriverMainPage> {
         builder: (context) {
           return SimpleDialog(
             title: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text("Deliveries"),
                 IconButton(
@@ -431,9 +443,7 @@ class _DriverMainPageState extends State<DriverMainPage> {
             ),
             children: [
               StreamBuilder(
-                  stream: firestore.FirebaseFirestore.instance
-                      .collection('deliveries')
-                      .snapshots(),
+                  stream: DatabaseManager().getAllDeliveries(),
                   builder: (context,
                       AsyncSnapshot<firestore.QuerySnapshot> snapshot) {
                     if (!snapshot.hasData) {
@@ -563,8 +573,7 @@ class _DriverMainPageState extends State<DriverMainPage> {
                                                       'in_progress': true,
                                                       'taken_by': user?.uid
                                                     });
-                                                    setState(() =>
-                                                        isTakingOrder = true);
+                                                    isTakingOrder = true;
                                                     Navigator.pop(context);
                                                   } else {
                                                     Fluttertoast.showToast(
@@ -596,19 +605,13 @@ class _DriverMainPageState extends State<DriverMainPage> {
     }
   }
 
-  void _cleanMap() {
-    mapController.clearAllRoads();
-    if (orderDeliveryLocation != null) {
-      orderDeliveryLocation = null;
-    }
-  }
-
   void openCurrentOrderSetting() {
     showDialog(
         context: context,
         builder: (context) {
           return SimpleDialog(
             title: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text("Order Settings"),
                 IconButton(
@@ -616,9 +619,76 @@ class _DriverMainPageState extends State<DriverMainPage> {
                     onPressed: () => Navigator.pop(context)),
               ],
             ),
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ElevatedButton(
+                    child: const Text(
+                      "Call client",
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                    onPressed: () {
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return FutureBuilder(
+                              future: DatabaseManager()
+                                  .getPhoneNumber(CurrentClientId),
+                              builder: (BuildContext context,
+                                  AsyncSnapshot<dynamic> snapshot) {
+                                return AlertDialog(
+                                    title: Text(
+                                        "Are you sure you would like to call ${snapshot.data.toString()} ?"),
+                                    actions: [
+                                      ElevatedButton(
+                                        child: const Text("Cancel"),
+                                        onPressed: () => Navigator.pop(context),
+                                      ),
+                                      ElevatedButton(
+                                        child: const Text("Call"),
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                          launchUrl(Uri.parse(
+                                              'tel://${snapshot.data.toString()}'));
+                                        },
+                                      )
+                                    ]);
+                              },
+                            );
+                          });
+                    }),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ElevatedButton(
+                    child: const Text(
+                      "Mark order as completed",
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                    onPressed: () {}),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ElevatedButton(
+                    child: const Text(
+                      "Stop taking this order",
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                    onPressed: () {
+                      mapController.clearAllRoads();
+                      isTakingOrder = false;
+                      currentOrderCustomerPhone = null;
+                      Navigator.pop(context);
+                    }),
+              ),
+            ],
           );
         });
   }
-
-  void _initialize() {}
 }
