@@ -1,4 +1,4 @@
-import 'dart:io';
+// ignore_for_file: prefer_typing_uninitialized_variables
 
 import 'package:cloud_firestore/cloud_firestore.dart' as firestore;
 import 'package:firebase_auth/firebase_auth.dart';
@@ -38,7 +38,7 @@ class _DriverMainPageState extends State<DriverMainPage> {
   bool isTakingOrder = false;
   var orderDeliveryLocation;
   var currentOrderCustomerPhone;
-  var CurrentClientId;
+  var currentClientId;
 
   @override
   Widget build(BuildContext context) {
@@ -398,7 +398,7 @@ class _DriverMainPageState extends State<DriverMainPage> {
                                                       'taken_by': user?.uid
                                                     });
                                                     setState(() {
-                                                      CurrentClientId = snapshot
+                                                      currentClientId = snapshot
                                                           .data
                                                           ?.docs[index]
                                                               ['ordered_by']
@@ -635,7 +635,7 @@ class _DriverMainPageState extends State<DriverMainPage> {
                           builder: (context) {
                             return FutureBuilder(
                               future: DatabaseManager()
-                                  .getPhoneNumber(CurrentClientId),
+                                  .getPhoneNumber(currentClientId),
                               builder: (BuildContext context,
                                   AsyncSnapshot<dynamic> snapshot) {
                                 return AlertDialog(
