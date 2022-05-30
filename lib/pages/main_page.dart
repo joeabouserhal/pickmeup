@@ -695,7 +695,6 @@ class _MainPageState extends State<MainPage> {
   }
 
   void _completedDeliveriesScreen() {
-    double currentSliderValue = 1;
     showDialog(
         context: context,
         builder: (context) {
@@ -950,7 +949,7 @@ _rideLocationPicker(context) {
   );
 }
 
-// delivery Destination and description Picker Sheet
+//* delivery Destination and description Picker Sheet
 _deliveryLocationPicker(context) {
   return Flexible(
     child: Padding(
