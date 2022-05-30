@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:getwidget/colors/gf_color.dart';
@@ -36,6 +37,7 @@ class _MainPageState extends State<MainPage> {
   MapController mapController = MapController(
     initMapWithUserPosition: true,
   );
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -614,22 +616,68 @@ class _MainPageState extends State<MainPage> {
                                     ],
                                   ),
                                   onTap: () async {
+                                    double currentOrderRating = 1;
                                     showDialog(
                                         context: context,
                                         builder: (context) {
-                                          return AlertDialog(
+                                          return SimpleDialog(
                                             shape: const RoundedRectangleBorder(
                                                 borderRadius: BorderRadius.all(
                                                     Radius.circular(8))),
                                             title: const Text(
                                                 "Would you like to rate this ride?"),
-                                            actions: [
-                                              GFButton(
-                                                text: "Cancel",
-                                                color: GFColors.WHITE,
-                                                textColor: GFColors.DARK,
-                                                onPressed: () =>
-                                                    Navigator.pop(context),
+                                            children: [
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.all(15),
+                                                child: RatingBar.builder(
+                                                  initialRating:
+                                                      currentOrderRating,
+                                                  minRating: 1,
+                                                  direction: Axis.horizontal,
+                                                  allowHalfRating: true,
+                                                  itemCount: 5,
+                                                  itemPadding: const EdgeInsets
+                                                          .symmetric(
+                                                      horizontal: 4.0),
+                                                  itemBuilder: (context, _) =>
+                                                      const Icon(
+                                                    Icons.star,
+                                                    color: Colors.amber,
+                                                  ),
+                                                  onRatingUpdate: (rating) {
+                                                    currentOrderRating = rating;
+                                                  },
+                                                ),
+                                              ),
+                                              Row(
+                                                children: [
+                                                  GFButton(
+                                                    text: "Cancel",
+                                                    color: GFColors.WHITE,
+                                                    textColor: GFColors.DARK,
+                                                    onPressed: () =>
+                                                        Navigator.pop(context),
+                                                  ),
+                                                  GFButton(
+                                                    text: "Rate",
+                                                    color: GFColors.WHITE,
+                                                    textColor: GFColors.DARK,
+                                                    onPressed: () {
+                                                      firestore
+                                                          .FirebaseFirestore
+                                                          .instance
+                                                          .collection('rides')
+                                                          .doc(snapshot.data
+                                                              ?.docs[index].id)
+                                                          .update({
+                                                        'rating':
+                                                            currentOrderRating
+                                                      });
+                                                      Navigator.pop(context);
+                                                    },
+                                                  )
+                                                ],
                                               ),
                                             ],
                                           );
@@ -647,6 +695,7 @@ class _MainPageState extends State<MainPage> {
   }
 
   void _completedDeliveriesScreen() {
+    double currentSliderValue = 1;
     showDialog(
         context: context,
         builder: (context) {
@@ -713,22 +762,69 @@ class _MainPageState extends State<MainPage> {
                                     ],
                                   ),
                                   onTap: () async {
+                                    double currentOrderRating = 1;
                                     showDialog(
                                         context: context,
                                         builder: (context) {
-                                          return AlertDialog(
+                                          return SimpleDialog(
                                             shape: const RoundedRectangleBorder(
                                                 borderRadius: BorderRadius.all(
                                                     Radius.circular(8))),
                                             title: const Text(
                                                 "Would you like to rate this ride?"),
-                                            actions: [
-                                              GFButton(
-                                                text: "Cancel",
-                                                color: GFColors.WHITE,
-                                                textColor: GFColors.DARK,
-                                                onPressed: () =>
-                                                    Navigator.pop(context),
+                                            children: [
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.all(15),
+                                                child: RatingBar.builder(
+                                                  initialRating:
+                                                      currentOrderRating,
+                                                  minRating: 1,
+                                                  direction: Axis.horizontal,
+                                                  allowHalfRating: true,
+                                                  itemCount: 5,
+                                                  itemPadding: const EdgeInsets
+                                                          .symmetric(
+                                                      horizontal: 4.0),
+                                                  itemBuilder: (context, _) =>
+                                                      const Icon(
+                                                    Icons.star,
+                                                    color: Colors.amber,
+                                                  ),
+                                                  onRatingUpdate: (rating) {
+                                                    currentOrderRating = rating;
+                                                  },
+                                                ),
+                                              ),
+                                              Row(
+                                                children: [
+                                                  GFButton(
+                                                    text: "Cancel",
+                                                    color: GFColors.WHITE,
+                                                    textColor: GFColors.DARK,
+                                                    onPressed: () =>
+                                                        Navigator.pop(context),
+                                                  ),
+                                                  GFButton(
+                                                    text: "Rate",
+                                                    color: GFColors.WHITE,
+                                                    textColor: GFColors.DARK,
+                                                    onPressed: () {
+                                                      firestore
+                                                          .FirebaseFirestore
+                                                          .instance
+                                                          .collection(
+                                                              'deliveries')
+                                                          .doc(snapshot.data
+                                                              ?.docs[index].id)
+                                                          .update({
+                                                        'rating':
+                                                            currentOrderRating
+                                                      });
+                                                      Navigator.pop(context);
+                                                    },
+                                                  )
+                                                ],
                                               ),
                                             ],
                                           );
@@ -754,7 +850,7 @@ class _MainPageState extends State<MainPage> {
   }
 }
 
-// Ride Location and Destination Picker Sheet
+//* Ride Location and Destination Picker Sheet
 _rideLocationPicker(context) {
   return Flexible(
     child: Padding(
