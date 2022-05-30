@@ -39,6 +39,8 @@ class _DriverMainPageState extends State<DriverMainPage> {
   var orderDeliveryLocation;
   var currentOrderCustomerPhone;
   var currentClientId;
+  var currentOrderId;
+  var currentOrderType;
 
   @override
   Widget build(BuildContext context) {
@@ -244,6 +246,7 @@ class _DriverMainPageState extends State<DriverMainPage> {
         });
   }
 
+  //* show the screen to take carpooling orders
   void _ridesModalSheet() {
     showDialog(
         context: context,
@@ -403,6 +406,10 @@ class _DriverMainPageState extends State<DriverMainPage> {
                                                           ?.docs[index]
                                                               ['ordered_by']
                                                           .toString();
+                                                      currentOrderId = snapshot
+                                                          .data?.docs[index].id;
+                                                      currentOrderType =
+                                                          "rides";
                                                     });
                                                     Navigator.pop(context);
                                                   } else {
@@ -427,6 +434,7 @@ class _DriverMainPageState extends State<DriverMainPage> {
         });
   }
 
+  //* show the screen to take delivery orders
   void _deliveriesModalSheet() {
     showDialog(
         context: context,
@@ -573,6 +581,17 @@ class _DriverMainPageState extends State<DriverMainPage> {
                                                       'in_progress': true,
                                                       'taken_by': user?.uid
                                                     });
+                                                    setState(() {
+                                                      currentClientId = snapshot
+                                                          .data
+                                                          ?.docs[index]
+                                                              ['ordered_by']
+                                                          .toString();
+                                                      currentOrderId = snapshot
+                                                          .data?.docs[index].id;
+                                                      currentOrderType =
+                                                          "deliveries";
+                                                    });
                                                     isTakingOrder = true;
                                                     Navigator.pop(context);
                                                   } else {
@@ -621,7 +640,7 @@ class _DriverMainPageState extends State<DriverMainPage> {
             ),
             children: [
               Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
                 child: ElevatedButton(
                     child: const Text(
                       "Call client",
@@ -661,7 +680,7 @@ class _DriverMainPageState extends State<DriverMainPage> {
                     }),
               ),
               Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
                 child: ElevatedButton(
                     child: const Text(
                       "Mark order as completed",
@@ -669,10 +688,43 @@ class _DriverMainPageState extends State<DriverMainPage> {
                         color: Colors.white,
                       ),
                     ),
-                    onPressed: () {}),
+                    onPressed: () {
+                      firestore.FirebaseFirestore.instance
+                          .collection(currentOrderType)
+                          .doc(currentOrderId)
+                          .update({
+                        'is_completed': true,
+                      });
+                      mapController.clearAllRoads();
+                      isTakingOrder = false;
+                      currentOrderCustomerPhone = null;
+                      Navigator.pop(context);
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              title:
+                                  const Text("Congrats on a finished order!!!"),
+                              content: const Icon(
+                                Icons.check_circle_outline_outlined,
+                                size: 100,
+                              ),
+                              actions: [
+                                ElevatedButton(
+                                  child: const Text(
+                                    "Okay",
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                  onPressed: () => Navigator.pop(context),
+                                )
+                              ],
+                            );
+                          });
+                      mapController.clearAllRoads();
+                    }),
               ),
               Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
                 child: ElevatedButton(
                     child: const Text(
                       "Stop taking this order",

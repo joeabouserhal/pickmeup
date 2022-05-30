@@ -36,7 +36,6 @@ class _MainPageState extends State<MainPage> {
   MapController mapController = MapController(
     initMapWithUserPosition: true,
   );
-
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -111,6 +110,30 @@ class _MainPageState extends State<MainPage> {
                                                 ),
                                                 onPressed: () {
                                                   _deliveriesModalSheet();
+                                                },
+                                              ),
+                                              const Padding(
+                                                  padding: EdgeInsets.all(5)),
+                                              CustomElevatedButton(
+                                                child: const Text(
+                                                  "Completed Rides",
+                                                  style: TextStyle(
+                                                      color: Colors.white),
+                                                ),
+                                                onPressed: () {
+                                                  _completedRidesScreen();
+                                                },
+                                              ),
+                                              const Padding(
+                                                  padding: EdgeInsets.all(5)),
+                                              CustomElevatedButton(
+                                                child: const Text(
+                                                  "Completed Deliveries",
+                                                  style: TextStyle(
+                                                      color: Colors.white),
+                                                ),
+                                                onPressed: () {
+                                                  _completedDeliveriesScreen();
                                                 },
                                               ),
                                               const Padding(
@@ -508,6 +531,204 @@ class _MainPageState extends State<MainPage> {
                                                       .delete();
                                                   Navigator.pop(context);
                                                 },
+                                              ),
+                                            ],
+                                          );
+                                        });
+                                  },
+                                );
+                              }),
+                        ),
+                      ),
+                    );
+                  })
+            ],
+          );
+        });
+  }
+
+  void _completedRidesScreen() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return SimpleDialog(
+            title: const Text("Completed Orders"),
+            children: [
+              StreamBuilder(
+                  stream: firestore.FirebaseFirestore.instance
+                      .collection('rides')
+                      .where('ordered_by', isEqualTo: user?.uid)
+                      .where('is_completed', isEqualTo: true)
+                      .snapshots(),
+                  builder: (context,
+                      AsyncSnapshot<firestore.QuerySnapshot> snapshot) {
+                    if (!snapshot.hasData) {
+                      return const Padding(
+                        padding: EdgeInsets.all(50),
+                        child: Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                      );
+                    }
+                    return SingleChildScrollView(
+                      child: Expanded(
+                        child: SizedBox(
+                          height: MediaQuery.of(context).size.height,
+                          child: ListView.builder(
+                              itemCount: snapshot.data?.docs.length,
+                              itemBuilder: (context, index) {
+                                return GFListTile(
+                                  color: Colors.grey[200],
+                                  icon:
+                                      const Icon(Icons.delivery_dining_rounded),
+                                  description: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const Text(
+                                        "Location:",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w600),
+                                      ),
+                                      Text(
+                                          "${snapshot.data?.docs[index]['location'].latitude.toString()}\n${snapshot.data?.docs[index]['location'].longitude.toString()}"),
+                                      const Text(
+                                        "Destination:",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w600),
+                                      ),
+                                      Text(
+                                          "${snapshot.data?.docs[index]['destination'].latitude.toString()}\n${snapshot.data?.docs[index]['destination'].longitude.toString()}"),
+                                      Row(
+                                        children: [
+                                          const Text(
+                                            "Is Completed: ",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w600),
+                                          ),
+                                          Text(
+                                              "${snapshot.data?.docs[index]['is_completed'].toString()}")
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                  onTap: () async {
+                                    showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return AlertDialog(
+                                            shape: const RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(8))),
+                                            title: const Text(
+                                                "Would you like to rate this ride?"),
+                                            actions: [
+                                              GFButton(
+                                                text: "Cancel",
+                                                color: GFColors.WHITE,
+                                                textColor: GFColors.DARK,
+                                                onPressed: () =>
+                                                    Navigator.pop(context),
+                                              ),
+                                            ],
+                                          );
+                                        });
+                                  },
+                                );
+                              }),
+                        ),
+                      ),
+                    );
+                  })
+            ],
+          );
+        });
+  }
+
+  void _completedDeliveriesScreen() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return SimpleDialog(
+            title: const Text("Completed Deliveries"),
+            children: [
+              StreamBuilder(
+                  stream: firestore.FirebaseFirestore.instance
+                      .collection('deliveries')
+                      .where('ordered_by', isEqualTo: user?.uid)
+                      .where('is_completed', isEqualTo: true)
+                      .snapshots(),
+                  builder: (context,
+                      AsyncSnapshot<firestore.QuerySnapshot> snapshot) {
+                    if (!snapshot.hasData) {
+                      return const Padding(
+                        padding: EdgeInsets.all(50),
+                        child: Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                      );
+                    }
+                    return SingleChildScrollView(
+                      child: Expanded(
+                        child: SizedBox(
+                          height: MediaQuery.of(context).size.height,
+                          child: ListView.builder(
+                              itemCount: snapshot.data?.docs.length,
+                              itemBuilder: (context, index) {
+                                return GFListTile(
+                                  color: Colors.grey[200],
+                                  icon:
+                                      const Icon(Icons.delivery_dining_rounded),
+                                  description: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const Text(
+                                        "Location:",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w600),
+                                      ),
+                                      Text(
+                                          "${snapshot.data?.docs[index]['location'].latitude.toString()}\n${snapshot.data?.docs[index]['location'].longitude.toString()}"),
+                                      const Text(
+                                        "Description:",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w600),
+                                      ),
+                                      Text(
+                                          "${snapshot.data?.docs[index]['description'].toString()}"),
+                                      Row(
+                                        children: [
+                                          const Text(
+                                            "Is Completed: ",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w600),
+                                          ),
+                                          Text(
+                                              "${snapshot.data?.docs[index]['is_completed'].toString()}")
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                  onTap: () async {
+                                    showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return AlertDialog(
+                                            shape: const RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(8))),
+                                            title: const Text(
+                                                "Would you like to rate this ride?"),
+                                            actions: [
+                                              GFButton(
+                                                text: "Cancel",
+                                                color: GFColors.WHITE,
+                                                textColor: GFColors.DARK,
+                                                onPressed: () =>
+                                                    Navigator.pop(context),
                                               ),
                                             ],
                                           );
