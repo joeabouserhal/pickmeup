@@ -9,6 +9,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:getwidget/colors/gf_color.dart';
 import 'package:getwidget/components/button/gf_button.dart';
 import 'package:getwidget/components/list_tile/gf_list_tile.dart';
+import 'package:getwidget/components/rating/gf_rating.dart';
 import 'package:pickmeup/pages/about_us.dart';
 import 'package:pickmeup/pages/contact_us.dart';
 import 'package:pickmeup/pages/login_page.dart';
@@ -554,7 +555,15 @@ class _MainPageState extends State<MainPage> {
         context: context,
         builder: (context) {
           return SimpleDialog(
-            title: const Text("Completed Orders"),
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text("Completed Rides"),
+                IconButton(
+                    icon: const Icon(Icons.close),
+                    onPressed: () => Navigator.pop(context)),
+              ],
+            ),
             children: [
               StreamBuilder(
                   stream: firestore.FirebaseFirestore.instance
@@ -581,8 +590,7 @@ class _MainPageState extends State<MainPage> {
                               itemBuilder: (context, index) {
                                 return GFListTile(
                                   color: Colors.grey[200],
-                                  icon:
-                                      const Icon(Icons.delivery_dining_rounded),
+                                  icon: const Icon(Icons.local_taxi_rounded),
                                   description: Column(
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     crossAxisAlignment:
@@ -602,16 +610,42 @@ class _MainPageState extends State<MainPage> {
                                       ),
                                       Text(
                                           "${snapshot.data?.docs[index]['destination'].latitude.toString()}\n${snapshot.data?.docs[index]['destination'].longitude.toString()}"),
+                                      const Text(
+                                        "Completed By: ",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w600),
+                                      ),
+                                      FutureBuilder(
+                                          future: DatabaseManager()
+                                              .getFullNameDriver(snapshot
+                                                  .data?.docs[index]['taken_by']
+                                                  .toString()),
+                                          builder: (context, snapshot) {
+                                            return Text(
+                                                snapshot.data.toString());
+                                          }),
                                       Row(
                                         children: [
                                           const Text(
-                                            "Is Completed: ",
+                                            "Rating: ",
                                             style: TextStyle(
                                                 fontWeight: FontWeight.w600),
                                           ),
                                           Text(
-                                              "${snapshot.data?.docs[index]['is_completed'].toString()}")
+                                              "${snapshot.data?.docs[index]['rating'].toString()} stars"),
                                         ],
+                                      ),
+                                      RatingBar.builder(
+                                        ignoreGestures: true,
+                                        itemSize: 20,
+                                        allowHalfRating: true,
+                                        initialRating: snapshot
+                                            .data?.docs[index]['rating'],
+                                        onRatingUpdate: (rating) {},
+                                        itemBuilder: (context, _) => const Icon(
+                                          Icons.star_rounded,
+                                          color: Colors.amber,
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -642,7 +676,7 @@ class _MainPageState extends State<MainPage> {
                                                       horizontal: 4.0),
                                                   itemBuilder: (context, _) =>
                                                       const Icon(
-                                                    Icons.star,
+                                                    Icons.star_rounded,
                                                     color: Colors.amber,
                                                   ),
                                                   onRatingUpdate: (rating) {
@@ -661,8 +695,8 @@ class _MainPageState extends State<MainPage> {
                                                   ),
                                                   GFButton(
                                                     text: "Rate",
-                                                    color: GFColors.WHITE,
-                                                    textColor: GFColors.DARK,
+                                                    color: Colors.amber,
+                                                    textColor: GFColors.WHITE,
                                                     onPressed: () {
                                                       firestore
                                                           .FirebaseFirestore
@@ -699,7 +733,17 @@ class _MainPageState extends State<MainPage> {
         context: context,
         builder: (context) {
           return SimpleDialog(
-            title: const Text("Completed Deliveries"),
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  "Completed\nDeliveries",
+                ),
+                IconButton(
+                    icon: const Icon(Icons.close),
+                    onPressed: () => Navigator.pop(context)),
+              ],
+            ),
             children: [
               StreamBuilder(
                   stream: firestore.FirebaseFirestore.instance
@@ -747,16 +791,43 @@ class _MainPageState extends State<MainPage> {
                                       ),
                                       Text(
                                           "${snapshot.data?.docs[index]['description'].toString()}"),
+                                      const Text(
+                                        "Completed By: ",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w600),
+                                      ),
+                                      FutureBuilder(
+                                          future: DatabaseManager()
+                                              .getFullNameDriver(snapshot
+                                                  .data?.docs[index]['taken_by']
+                                                  .toString()),
+                                          builder: (context, snapshot) {
+                                            return Text(
+                                                snapshot.data.toString());
+                                          }),
                                       Row(
                                         children: [
                                           const Text(
-                                            "Is Completed: ",
+                                            "Rating: ",
                                             style: TextStyle(
                                                 fontWeight: FontWeight.w600),
                                           ),
                                           Text(
-                                              "${snapshot.data?.docs[index]['is_completed'].toString()}")
+                                              "${snapshot.data?.docs[index]['rating'].toString()} stars")
                                         ],
+                                      ),
+                                      RatingBar.builder(
+                                        ignoreGestures: true,
+                                        itemSize: 20,
+                                        allowHalfRating: true,
+                                        initialRating: double.parse(snapshot
+                                            .data?.docs[index]['rating']
+                                            .toString() as String),
+                                        onRatingUpdate: (rating) {},
+                                        itemBuilder: (context, _) => const Icon(
+                                          Icons.star_rounded,
+                                          color: Colors.amber,
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -770,7 +841,7 @@ class _MainPageState extends State<MainPage> {
                                                 borderRadius: BorderRadius.all(
                                                     Radius.circular(8))),
                                             title: const Text(
-                                                "Would you like to rate this ride?"),
+                                                "Would you like to rate this delivery?"),
                                             children: [
                                               Padding(
                                                 padding:
@@ -787,7 +858,7 @@ class _MainPageState extends State<MainPage> {
                                                       horizontal: 4.0),
                                                   itemBuilder: (context, _) =>
                                                       const Icon(
-                                                    Icons.star,
+                                                    Icons.star_rounded,
                                                     color: Colors.amber,
                                                   ),
                                                   onRatingUpdate: (rating) {
@@ -800,14 +871,13 @@ class _MainPageState extends State<MainPage> {
                                                   GFButton(
                                                     text: "Cancel",
                                                     color: GFColors.WHITE,
-                                                    textColor: GFColors.DARK,
                                                     onPressed: () =>
                                                         Navigator.pop(context),
                                                   ),
                                                   GFButton(
                                                     text: "Rate",
-                                                    color: GFColors.WHITE,
-                                                    textColor: GFColors.DARK,
+                                                    textColor: GFColors.WHITE,
+                                                    color: Colors.amber,
                                                     onPressed: () {
                                                       firestore
                                                           .FirebaseFirestore
@@ -934,6 +1004,7 @@ _rideLocationPicker(context) {
                         rideLocation.latitude, rideLocation.longitude),
                     'destination': firestore.GeoPoint(
                         rideDestination.latitude, rideDestination.longitude),
+                    'rating': 0,
                     'date_ordered': firestore.Timestamp.now(),
                   }).then((value) {
                     Fluttertoast.showToast(msg: 'Ride Ordered');
@@ -1033,6 +1104,7 @@ _deliveryLocationPicker(context) {
                     'description': deliverDescriptionController.text,
                     'date_ordered': firestore.Timestamp.now(),
                     'in_progress': false,
+                    'rating': 0,
                     'taken_by': "",
                   }).then((value) {
                     Fluttertoast.showToast(msg: 'Delivery Ordered');

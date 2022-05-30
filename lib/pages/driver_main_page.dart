@@ -707,6 +707,7 @@ class _DriverMainPageState extends State<DriverMainPage> {
                                   const Text("Congrats on a finished order!!!"),
                               content: const Icon(
                                 Icons.check_circle_outline_outlined,
+                                color: Colors.greenAccent,
                                 size: 100,
                               ),
                               actions: [
