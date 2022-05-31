@@ -8,12 +8,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class DriverProfilePage extends StatelessWidget {
-  const DriverProfilePage({Key? key}) : super(key: key);
+  DriverProfilePage({Key? key}) : super(key: key);
+
+  final GlobalKey<FormState> _key = GlobalKey<FormState>();
+  final user = FirebaseAuth.instance.currentUser;
+  final firstNameController = TextEditingController();
+  final lastNameController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    final user = FirebaseAuth.instance.currentUser;
     return Scaffold(
+        resizeToAvoidBottomInset: false,
         appBar: AppBar(
           systemOverlayStyle: const SystemUiOverlayStyle(
               statusBarColor: Colors.transparent,
@@ -45,6 +50,83 @@ class DriverProfilePage extends StatelessWidget {
                     );
                   },
                 ),
+                Center(
+                  child: GFButton(
+                    shape: GFButtonShape.pills,
+                    text: "Change Name",
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return SimpleDialog(
+                            title: const Text("Please enter the new values"),
+                            children: [
+                              Form(
+                                key: _key,
+                                child: Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(25, 0, 25, 0),
+                                  child: Column(
+                                    children: [
+                                      TextFormField(
+                                          controller: firstNameController,
+                                          decoration: const InputDecoration(
+                                              hintText: "First Name"),
+                                          validator: (value) {
+                                            if (value == null ||
+                                                value.isEmpty) {
+                                              return 'Field is required';
+                                            }
+                                            return null;
+                                          }),
+                                      TextFormField(
+                                        controller: lastNameController,
+                                        decoration: const InputDecoration(
+                                            hintText: "Last Name"),
+                                        validator: (value) {
+                                          if (value == null || value.isEmpty) {
+                                            return 'Field is required';
+                                          }
+                                          return null;
+                                        },
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(25.0),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    GFButton(
+                                      text: "Cancel",
+                                      color: Colors.white,
+                                      textColor: Colors.black,
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                    ),
+                                    GFButton(
+                                      text: "Submit",
+                                      color: Colors.cyan,
+                                      onPressed: () {
+                                        if (_key.currentState!.validate()) {
+                                          _key.currentState!.save();
+                                        }
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              )
+                            ],
+                          );
+                        },
+                      );
+                    },
+                  ),
+                ),
                 GFListTile(
                   titleText: "Email",
                   description: Text("${user?.email}"),
@@ -70,7 +152,7 @@ class DriverProfilePage extends StatelessWidget {
                     );
                   },
                 ),
-                const SizedBox(height: 80),
+                const SizedBox(height: 40),
                 Center(
                   child: GFButton(
                       shape: GFButtonShape.pills,
