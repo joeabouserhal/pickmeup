@@ -1,7 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:pickmeup/pages/login_page.dart';
 
 void main(List<String> args) async {
@@ -24,16 +23,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.cyan,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: const LoginPage(),
+      home: LoginPage(),
     );
-  }
-
-  //! WIP
-  checkLogin() {
-    var _storage = const FlutterSecureStorage();
-    if (_storage.read(
-          key: "email",
-        ) !=
-        null) {}
   }
 }

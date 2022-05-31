@@ -6,6 +6,7 @@ import 'package:pickmeup/pages/forgot_password_page.dart';
 import 'package:pickmeup/pages/main_page.dart';
 
 import 'package:pickmeup/widgets/sign_in_button.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 bool _isObscure = true;
 
@@ -145,13 +146,17 @@ class _LoginEmailPageState extends State<LoginEmailPage> {
                             password: _passwordTextController.text,
                           )
                           .then((value) => {
+                                saveLoginData(_emailTextController.text,
+                                    _passwordTextController.text),
                                 Fluttertoast.showToast(
                                     msg:
                                         'Successfully logged in as ${value.user?.email}'),
                                 Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => const MainPage()))
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const MainPage(),
+                                  ),
+                                ),
                               })
                           .onError((error, stackTrace) {
                         Fluttertoast.showToast(msg: 'Error: $error');
@@ -165,4 +170,11 @@ class _LoginEmailPageState extends State<LoginEmailPage> {
       ),
     );
   }
+}
+
+saveLoginData(String email, String password) async {
+  final prefs = await SharedPreferences.getInstance();
+  await prefs.setString('email', email);
+  await prefs.setString('password', password);
+  await prefs.setBool('isCustomer', true);
 }

@@ -5,6 +5,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pickmeup/pages/forgot_password_page.dart';
 
 import 'package:pickmeup/widgets/sign_in_button.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'driver_main_page.dart';
 
@@ -142,20 +143,20 @@ class _DriverLoginEmailPageState extends State<DriverLoginEmailPage> {
                       _key.currentState!.save();
                       FirebaseAuth.instance
                           .signInWithEmailAndPassword(
-                            email: _emailTextController.text,
-                            password: _passwordTextController.text,
-                          )
-                          .then((value) => {
-                                Fluttertoast.showToast(
-                                    msg:
-                                        'Successfully logged in as ${value.user?.email}'),
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            const DriverMainPage()))
-                              })
-                          .onError((error, stackTrace) {
+                        email: _emailTextController.text,
+                        password: _passwordTextController.text,
+                      )
+                          .then((value) {
+                        saveLoginData(_emailTextController.text,
+                            _passwordTextController.text);
+                        Fluttertoast.showToast(
+                            msg:
+                                'Successfully logged in as ${value.user?.email}');
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const DriverMainPage()));
+                      }).onError((error, stackTrace) {
                         Fluttertoast.showToast(msg: 'Error: $error');
                         throw error.toString();
                       });
@@ -167,4 +168,11 @@ class _DriverLoginEmailPageState extends State<DriverLoginEmailPage> {
       ),
     );
   }
+}
+
+saveLoginData(String email, String password) async {
+  final prefs = await SharedPreferences.getInstance();
+  await prefs.setString('email', email);
+  await prefs.setString('password', password);
+  await prefs.setBool('isDriver', true);
 }

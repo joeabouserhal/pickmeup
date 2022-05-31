@@ -9,13 +9,13 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:getwidget/colors/gf_color.dart';
 import 'package:getwidget/components/button/gf_button.dart';
 import 'package:getwidget/components/list_tile/gf_list_tile.dart';
-import 'package:getwidget/components/rating/gf_rating.dart';
 import 'package:pickmeup/pages/about_us.dart';
 import 'package:pickmeup/pages/contact_us.dart';
 import 'package:pickmeup/pages/login_page.dart';
 import 'package:pickmeup/pages/profile_page.dart';
 import 'package:pickmeup/utils/database_manager.dart';
 import 'package:pickmeup/widgets/common_elevated_button.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 GeoPoint rideLocation = const firestore.GeoPoint(0, 0) as GeoPoint;
 GeoPoint rideDestination = const firestore.GeoPoint(0, 0) as GeoPoint;
@@ -223,13 +223,16 @@ class _MainPageState extends State<MainPage> {
               title: const Text("Log Out"),
               leading: const Icon(Icons.logout_rounded),
               onTap: () {
-                FirebaseAuth.instance.signOut().then((value) => {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const LoginPage()),
-                      )
-                    });
+                FirebaseAuth.instance.signOut().then((value) async {
+                  final prefs = await SharedPreferences.getInstance();
+                  await prefs.remove('email');
+                  await prefs.remove('password');
+                  await prefs.remove('isCustomer');
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const LoginPage()),
+                  );
+                });
               },
             ),
           ]),

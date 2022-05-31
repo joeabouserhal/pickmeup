@@ -1,17 +1,22 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pickmeup/pages/driver_login_page.dart';
 import 'package:pickmeup/pages/login_email_page.dart';
 import 'package:pickmeup/pages/main_page.dart';
 import 'package:pickmeup/pages/sign_up_page.dart';
 import 'package:pickmeup/widgets/sign_in_button.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'driver_main_page.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    checkLogin(context);
     return Scaffold(
       appBar: AppBar(
         systemOverlayStyle: SystemUiOverlayStyle(
@@ -102,5 +107,54 @@ class LoginPage extends StatelessWidget {
         ],
       )),
     );
+  }
+
+  checkLogin(context) async {
+    final prefs = await SharedPreferences.getInstance();
+    final String? email = prefs.getString('email');
+    final String? password = prefs.getString('password');
+    final bool? isCustomer = prefs.getBool('isCustomer');
+    final bool? isDriver = prefs.getBool('isDriver');
+    if (email != null && password != null) {
+      if (isCustomer == true) {
+        FirebaseAuth.instance
+            .signInWithEmailAndPassword(
+          email: email,
+          password: password,
+        )
+            .then((value) {
+          Fluttertoast.showToast(
+              msg: 'Successfully logged in as ${value.user?.email}');
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const MainPage(),
+            ),
+          );
+        }).onError((error, stackTrace) {
+          Fluttertoast.showToast(msg: 'Error: $error');
+          throw error.toString();
+        });
+      } else if (isDriver == true) {
+        FirebaseAuth.instance
+            .signInWithEmailAndPassword(
+          email: email,
+          password: password,
+        )
+            .then((value) {
+          Fluttertoast.showToast(
+              msg: 'Successfully logged in as ${value.user?.email}');
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const DriverMainPage(),
+            ),
+          );
+        }).onError((error, stackTrace) {
+          Fluttertoast.showToast(msg: 'Error: $error');
+          throw error.toString();
+        });
+      }
+    }
   }
 }

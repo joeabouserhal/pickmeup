@@ -15,7 +15,14 @@ import 'package:pickmeup/pages/contact_us.dart';
 import 'package:pickmeup/pages/login_page.dart';
 import 'package:pickmeup/utils/database_manager.dart';
 import 'package:pickmeup/widgets/common_elevated_button.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+MapController mapController = MapController(
+  initMapWithUserPosition: true,
+  // center to lebanon by default
+  initPosition: GeoPoint(latitude: 33.8547, longitude: 35.8623),
+);
 
 class DriverMainPage extends StatefulWidget {
   const DriverMainPage({Key? key}) : super(key: key);
@@ -29,11 +36,7 @@ var user = FirebaseAuth.instance.currentUser;
 
 class _DriverMainPageState extends State<DriverMainPage> {
   // OSM Map controller
-  MapController mapController = MapController(
-    initMapWithUserPosition: true,
-    // center to lebanon by default
-    initPosition: GeoPoint(latitude: 33.8547, longitude: 35.8623),
-  );
+
   // order variables:
   bool isTakingOrder = false;
   var orderDeliveryLocation;
@@ -123,7 +126,11 @@ class _DriverMainPageState extends State<DriverMainPage> {
             ListTile(
               title: const Text("Log Out"),
               leading: const Icon(Icons.logout_rounded),
-              onTap: () {
+              onTap: () async {
+                final prefs = await SharedPreferences.getInstance();
+                await prefs.remove('email');
+                await prefs.remove('password');
+                await prefs.remove('isDriver');
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => const LoginPage()),
@@ -353,7 +360,7 @@ class _DriverMainPageState extends State<DriverMainPage> {
                                                 borderRadius: BorderRadius.all(
                                                     Radius.circular(8))),
                                             title: const Text(
-                                                "Do you want take this order?"),
+                                                "Do you want take this ride?"),
                                             actions: [
                                               GFButton(
                                                 text: "Cancel",
@@ -364,8 +371,10 @@ class _DriverMainPageState extends State<DriverMainPage> {
                                               ),
                                               GFButton(
                                                 text: "Take",
-                                                onPressed: () {
+                                                onPressed: () async {
                                                   if (isTakingOrder == false) {
+                                                    await saveRideInfo(
+                                                        snapshot, index);
                                                     setState(() =>
                                                         isTakingOrder = true);
                                                     mapController.drawRoad(
@@ -432,6 +441,37 @@ class _DriverMainPageState extends State<DriverMainPage> {
             ],
           );
         });
+  }
+
+  Future<void> saveRideInfo(
+      AsyncSnapshot<firestore.QuerySnapshot<Object?>> snapshot,
+      int index) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setDouble('ride_location_latitude',
+        snapshot.data?.docs[index]['location'].latitude);
+    await prefs.setDouble('ride_location_longitude',
+        snapshot.data?.docs[index]['location'].longitude);
+    await prefs.setDouble('ride_destination_latitude',
+        snapshot.data?.docs[index]['destination'].latitude);
+    await prefs.setDouble('ride_destination_longitude',
+        snapshot.data?.docs[index]['destination'].longitude);
+    await prefs.setString('ride_id', snapshot.data!.docs[index].id);
+    await prefs.setString(
+        'ride_ordered_by', snapshot.data?.docs[index]['ordered_by']);
+    await prefs.setBool('isTakingRide', true);
+  }
+
+  Future<void> saveDeliveryInfoInfo(
+      AsyncSnapshot<firestore.QuerySnapshot<Object?>> snapshot,
+      int index) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setDouble('delivery_location_latitude',
+        snapshot.data?.docs[index]['location'].latitude);
+    await prefs.setDouble('delivery_location_longitude',
+        snapshot.data?.docs[index]['location'].longitude);
+    await prefs.setString(
+        'delivery_description', snapshot.data?.docs[index]['description']);
+    await prefs.setBool('isTakingDelivery', true);
   }
 
   //* show the screen to take delivery orders
@@ -535,7 +575,7 @@ class _DriverMainPageState extends State<DriverMainPage> {
                                                 borderRadius: BorderRadius.all(
                                                     Radius.circular(8))),
                                             title: const Text(
-                                                "Do you want to take this ride?"),
+                                                "Do you want to take this delivery?"),
                                             actions: [
                                               GFButton(
                                                 text: "Cancel",
@@ -548,6 +588,8 @@ class _DriverMainPageState extends State<DriverMainPage> {
                                                 text: "Take",
                                                 onPressed: () {
                                                   if (isTakingOrder == false) {
+                                                    saveDeliveryInfoInfo(
+                                                        snapshot, index);
                                                     mapController.addMarker(
                                                         orderDeliveryLocation = GeoPoint(
                                                             latitude: snapshot
@@ -626,122 +668,175 @@ class _DriverMainPageState extends State<DriverMainPage> {
 
   void openCurrentOrderSetting() {
     showDialog(
-        context: context,
-        builder: (context) {
-          return SimpleDialog(
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text("Order Settings"),
-                IconButton(
-                    icon: const Icon(Icons.close),
-                    onPressed: () => Navigator.pop(context)),
-              ],
-            ),
+      context: context,
+      builder: (context) {
+        return SimpleDialog(
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
-                child: ElevatedButton(
-                    child: const Text(
-                      "Call client",
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
-                    ),
-                    onPressed: () {
-                      showDialog(
-                          context: context,
-                          builder: (context) {
-                            return FutureBuilder(
-                              future: DatabaseManager()
-                                  .getPhoneNumber(currentClientId),
-                              builder: (BuildContext context,
-                                  AsyncSnapshot<dynamic> snapshot) {
-                                return AlertDialog(
-                                    title: Text(
-                                        "Are you sure you would like to call ${snapshot.data.toString()} ?"),
-                                    actions: [
-                                      ElevatedButton(
-                                        child: const Text("Cancel"),
-                                        onPressed: () => Navigator.pop(context),
-                                      ),
-                                      ElevatedButton(
-                                        child: const Text("Call"),
-                                        onPressed: () {
-                                          Navigator.pop(context);
-                                          launchUrl(Uri.parse(
-                                              'tel://${snapshot.data.toString()}'));
-                                        },
-                                      )
-                                    ]);
-                              },
-                            );
-                          });
-                    }),
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
-                child: ElevatedButton(
-                    child: const Text(
-                      "Mark order as completed",
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
-                    ),
-                    onPressed: () {
-                      firestore.FirebaseFirestore.instance
-                          .collection(currentOrderType)
-                          .doc(currentOrderId)
-                          .update({
-                        'is_completed': true,
-                      });
-                      mapController.clearAllRoads();
-                      isTakingOrder = false;
-                      currentOrderCustomerPhone = null;
-                      Navigator.pop(context);
-                      showDialog(
-                          context: context,
-                          builder: (context) {
-                            return AlertDialog(
-                              title:
-                                  const Text("Congrats on a finished order!!!"),
-                              content: const Icon(
-                                Icons.check_circle_outline_outlined,
-                                color: Colors.greenAccent,
-                                size: 100,
-                              ),
-                              actions: [
-                                ElevatedButton(
-                                  child: const Text(
-                                    "Okay",
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                  onPressed: () => Navigator.pop(context),
-                                )
-                              ],
-                            );
-                          });
-                      mapController.clearAllRoads();
-                    }),
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
-                child: ElevatedButton(
-                    child: const Text(
-                      "Stop taking this order",
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
-                    ),
-                    onPressed: () {
-                      mapController.clearAllRoads();
-                      isTakingOrder = false;
-                      currentOrderCustomerPhone = null;
-                      Navigator.pop(context);
-                    }),
-              ),
+              const Text("Order Settings"),
+              IconButton(
+                  icon: const Icon(Icons.close),
+                  onPressed: () => Navigator.pop(context)),
             ],
-          );
-        });
+          ),
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
+              child: ElevatedButton(
+                  child: const Text(
+                    "Call client",
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
+                  onPressed: () {
+                    showDialog(
+                        context: context,
+                        builder: (context) {
+                          return FutureBuilder(
+                            future: DatabaseManager()
+                                .getPhoneNumber(currentClientId),
+                            builder: (BuildContext context,
+                                AsyncSnapshot<dynamic> snapshot) {
+                              return AlertDialog(
+                                  title: Text(
+                                      "Are you sure you would like to call ${snapshot.data.toString()} ?"),
+                                  actions: [
+                                    ElevatedButton(
+                                      child: const Text("Cancel"),
+                                      onPressed: () => Navigator.pop(context),
+                                    ),
+                                    ElevatedButton(
+                                      child: const Text("Call"),
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                        launchUrl(Uri.parse(
+                                            'tel://${snapshot.data.toString()}'));
+                                      },
+                                    )
+                                  ]);
+                            },
+                          );
+                        });
+                  }),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
+              child: ElevatedButton(
+                  child: const Text(
+                    "Mark order as completed",
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
+                  onPressed: () {
+                    firestore.FirebaseFirestore.instance
+                        .collection(currentOrderType)
+                        .doc(currentOrderId)
+                        .update({
+                      'is_completed': true,
+                    });
+                    mapController.clearAllRoads();
+                    isTakingOrder = false;
+                    currentOrderCustomerPhone = null;
+                    Navigator.pop(context);
+                    showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title:
+                                const Text("Congrats on a finished order!!!"),
+                            content: const Icon(
+                              Icons.check_circle_outline_outlined,
+                              color: Colors.greenAccent,
+                              size: 100,
+                            ),
+                            actions: [
+                              ElevatedButton(
+                                child: const Text(
+                                  "Okay",
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                                onPressed: () => Navigator.pop(context),
+                              )
+                            ],
+                          );
+                        });
+                    mapController.clearAllRoads();
+                  }),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
+              child: ElevatedButton(
+                  child: const Text(
+                    "Stop taking this order",
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
+                  onPressed: () {
+                    mapController.clearAllRoads();
+                    isTakingOrder = false;
+                    currentOrderCustomerPhone = null;
+                    Navigator.pop(context);
+                  }),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  checkForRide() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    //! ride info
+    final rideLocationLatitude =
+        await prefs.getDouble('ride_location_latitude');
+    final rideLocationLongitude =
+        await prefs.getDouble('ride_location_longitude');
+    final rideDestinationLatitude =
+        prefs.getDouble('ride_destination_latitude');
+    final rideDestinationLongitude =
+        prefs.getDouble('ride_destination_longitude');
+    final rideId = await prefs.getString('ride_id');
+    final clientId = await prefs.getString('ride_ordered_by');
+    final isTakingRide = await prefs.getBool('isTakingRide');
+
+    //!delivery info
+    final deliveryLocationLatitude =
+        await prefs.getDouble('delivery_location_latitude');
+    final deliveryLocationLongitude =
+        await prefs.getDouble('delivery_location_longitude');
+    final deliveryDescription = await prefs.getString('delivery_description');
+    final isTakingDelivery = await prefs.getBool('isTakingDelivery');
+
+    //! logic
+    if (isTakingRide == true) {
+      setState(() => isTakingOrder = true);
+      mapController.drawRoad(
+        GeoPoint(
+          latitude: rideLocationLatitude!,
+          longitude: rideLocationLongitude!,
+        ),
+        GeoPoint(
+          latitude: rideDestinationLatitude!,
+          longitude: rideDestinationLongitude!,
+        ),
+      );
+      setState(() {
+        currentClientId = clientId;
+        currentOrderId = rideId;
+        currentOrderType = "rides";
+      });
+    } else if (isTakingDelivery == true) {
+      setState(() => isTakingOrder = true);
+      mapController.addMarker(
+        GeoPoint(
+            latitude: deliveryLocationLatitude!,
+            longitude: deliveryLocationLongitude!),
+      );
+    }
   }
 }
