@@ -89,7 +89,7 @@ class _DriverMainPageState extends State<DriverMainPage> {
                   width: 10,
                 ),
                 FutureBuilder(
-                  future: DatabaseManager().getFullNameDriver(user?.uid),
+                  future: DatabaseManager().getDriverFullName(user?.uid),
                   builder: (context, snapshot) {
                     return Text(
                       snapshot.data.toString(),
