@@ -9,7 +9,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:getwidget/colors/gf_color.dart';
 import 'package:getwidget/components/button/gf_button.dart';
 import 'package:getwidget/components/list_tile/gf_list_tile.dart';
-import 'package:getwidget/components/rating/gf_rating.dart';
 import 'package:pickmeup/pages/about_us.dart';
 import 'package:pickmeup/pages/contact_us.dart';
 import 'package:pickmeup/pages/login_page.dart';
@@ -617,7 +616,7 @@ class _MainPageState extends State<MainPage> {
                                       ),
                                       FutureBuilder(
                                           future: DatabaseManager()
-                                              .getFullNameDriver(snapshot
+                                              .getDriverFullName(snapshot
                                                   .data?.docs[index]['taken_by']
                                                   .toString()),
                                           builder: (context, snapshot) {
@@ -798,7 +797,7 @@ class _MainPageState extends State<MainPage> {
                                       ),
                                       FutureBuilder(
                                           future: DatabaseManager()
-                                              .getFullNameDriver(snapshot
+                                              .getDriverFullName(snapshot
                                                   .data?.docs[index]['taken_by']
                                                   .toString()),
                                           builder: (context, snapshot) {
