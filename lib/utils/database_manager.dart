@@ -30,8 +30,14 @@ class DatabaseManager {
   }
 
   Stream<QuerySnapshot<Map<String, dynamic>>> getAllRides() =>
-      FirebaseFirestore.instance.collection('rides').snapshots();
+      FirebaseFirestore.instance
+          .collection('rides')
+          .where('is_completed', isEqualTo: false)
+          .snapshots();
 
   Stream<QuerySnapshot<Map<String, dynamic>>> getAllDeliveries() =>
-      FirebaseFirestore.instance.collection('deliveries').snapshots();
+      FirebaseFirestore.instance
+          .collection('deliveries')
+          .where('is_completed', isEqualTo: false)
+          .snapshots();
 }
