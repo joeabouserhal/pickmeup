@@ -114,6 +114,24 @@ class ProfilePage extends StatelessWidget {
                                       onPressed: () {
                                         if (_key.currentState!.validate()) {
                                           _key.currentState!.save();
+                                          FirebaseFirestore.instance
+                                              .collection('users')
+                                              .doc(user?.uid)
+                                              .update({
+                                            'first_name':
+                                                firstNameController.text,
+                                            'last_name':
+                                                lastNameController.text,
+                                          }).then((value) {
+                                            Fluttertoast.showToast(
+                                                msg:
+                                                    'Successfully changed name!');
+                                            Navigator.pop(context);
+                                          }).catchError((error) {
+                                            Fluttertoast.showToast(
+                                                msg: error.toString());
+                                            Navigator.pop(context);
+                                          });
                                         }
                                       },
                                     ),
