@@ -803,25 +803,22 @@ class _DriverMainPageState extends State<DriverMainPage> {
     final prefs = await SharedPreferences.getInstance();
 
     //! ride info
-    final rideLocationLatitude =
-        await prefs.getDouble('ride_location_latitude');
-    final rideLocationLongitude =
-        await prefs.getDouble('ride_location_longitude');
+    final rideLocationLatitude = prefs.getDouble('ride_location_latitude');
+    final rideLocationLongitude = prefs.getDouble('ride_location_longitude');
     final rideDestinationLatitude =
         prefs.getDouble('ride_destination_latitude');
     final rideDestinationLongitude =
         prefs.getDouble('ride_destination_longitude');
-    final rideId = await prefs.getString('ride_id');
-    final clientId = await prefs.getString('ride_ordered_by');
-    final isTakingRide = await prefs.getBool('isTakingRide');
+    final rideId = prefs.getString('ride_id');
+    final clientId = prefs.getString('ride_ordered_by');
+    final isTakingRide = prefs.getBool('isTakingRide');
 
     //!delivery info
     final deliveryLocationLatitude =
-        await prefs.getDouble('delivery_location_latitude');
+        prefs.getDouble('delivery_location_latitude');
     final deliveryLocationLongitude =
-        await prefs.getDouble('delivery_location_longitude');
-    final deliveryDescription = await prefs.getString('delivery_description');
-    final isTakingDelivery = await prefs.getBool('isTakingDelivery');
+        prefs.getDouble('delivery_location_longitude');
+    final isTakingDelivery = prefs.getBool('isTakingDelivery');
 
     //! logic
     if (isTakingRide == true) {
