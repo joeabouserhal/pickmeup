@@ -6,7 +6,7 @@ class DatabaseManager {
     return a['first_name'] + " " + a['last_name'];
   }
 
-  Future<String> getFullNameDriver(uid) async {
+  Future<String> getDriverFullName(uid) async {
     var a =
         await FirebaseFirestore.instance.collection("drivers").doc(uid).get();
     return a['first_name'] + " " + a['last_name'];
@@ -15,6 +15,18 @@ class DatabaseManager {
   Future<String> getPhoneNumber(uid) async {
     var a = await FirebaseFirestore.instance.collection('users').doc(uid).get();
     return a['phone_number'];
+  }
+
+  Future<String> getDriverPhoneNumber(uid) async {
+    var a =
+        await FirebaseFirestore.instance.collection('drivers').doc(uid).get();
+    return a['phone_number'];
+  }
+
+  Future<String> getDriverLicenseNumber(uid) async {
+    var a =
+        await FirebaseFirestore.instance.collection('drivers').doc(uid).get();
+    return a['license_number'];
   }
 
   Stream<QuerySnapshot<Map<String, dynamic>>> getAllRides() =>
