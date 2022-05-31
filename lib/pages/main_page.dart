@@ -194,7 +194,7 @@ class _MainPageState extends State<MainPage> {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const ProfilePage()),
+                  MaterialPageRoute(builder: (context) => ProfilePage()),
                 );
               },
             ),
@@ -620,7 +620,7 @@ class _MainPageState extends State<MainPage> {
                                       ),
                                       FutureBuilder(
                                           future: DatabaseManager()
-                                              .getFullNameDriver(snapshot
+                                              .getDriverFullName(snapshot
                                                   .data?.docs[index]['taken_by']
                                                   .toString()),
                                           builder: (context, snapshot) {
@@ -801,7 +801,7 @@ class _MainPageState extends State<MainPage> {
                                       ),
                                       FutureBuilder(
                                           future: DatabaseManager()
-                                              .getFullNameDriver(snapshot
+                                              .getDriverFullName(snapshot
                                                   .data?.docs[index]['taken_by']
                                                   .toString()),
                                           builder: (context, snapshot) {

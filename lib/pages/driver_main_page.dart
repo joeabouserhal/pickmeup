@@ -12,6 +12,7 @@ import 'package:getwidget/components/button/gf_button.dart';
 import 'package:getwidget/components/list_tile/gf_list_tile.dart';
 import 'package:pickmeup/pages/about_us.dart';
 import 'package:pickmeup/pages/contact_us.dart';
+import 'package:pickmeup/pages/driver_profile_page.dart';
 import 'package:pickmeup/pages/login_page.dart';
 import 'package:pickmeup/utils/database_manager.dart';
 import 'package:pickmeup/widgets/common_elevated_button.dart';
@@ -92,7 +93,7 @@ class _DriverMainPageState extends State<DriverMainPage> {
                   width: 10,
                 ),
                 FutureBuilder(
-                  future: DatabaseManager().getFullNameDriver(user?.uid),
+                  future: DatabaseManager().getDriverFullName(user?.uid),
                   builder: (context, snapshot) {
                     return Text(
                       snapshot.data.toString(),
@@ -101,6 +102,16 @@ class _DriverMainPageState extends State<DriverMainPage> {
                   },
                 )
               ])),
+            ),
+            ListTile(
+              title: const Text("Profile"),
+              leading: const Icon(Icons.person),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => DriverProfilePage()),
+                );
+              },
             ),
             ListTile(
               title: const Text("Contact Us"),

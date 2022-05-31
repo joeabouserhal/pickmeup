@@ -7,8 +7,8 @@ import 'package:pickmeup/utils/database_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class ProfilePage extends StatelessWidget {
-  ProfilePage({Key? key}) : super(key: key);
+class DriverProfilePage extends StatelessWidget {
+  DriverProfilePage({Key? key}) : super(key: key);
 
   final GlobalKey<FormState> _key = GlobalKey<FormState>();
   final user = FirebaseAuth.instance.currentUser;
@@ -41,7 +41,7 @@ class ProfilePage extends StatelessWidget {
                         size: 100, color: Colors.black)),
                 const SizedBox(height: 100),
                 FutureBuilder(
-                  future: DatabaseManager().getFullName(user?.uid),
+                  future: DatabaseManager().getDriverFullName(user?.uid),
                   builder: (context, snapshot) {
                     return GFListTile(
                       titleText: "Name",
@@ -115,7 +115,7 @@ class ProfilePage extends StatelessWidget {
                                         if (_key.currentState!.validate()) {
                                           _key.currentState!.save();
                                           FirebaseFirestore.instance
-                                              .collection('users')
+                                              .collection('drivers')
                                               .doc(user?.uid)
                                               .update({
                                             'first_name':
@@ -151,7 +151,7 @@ class ProfilePage extends StatelessWidget {
                   icon: const Icon(Icons.mail),
                 ),
                 FutureBuilder(
-                  future: DatabaseManager().getPhoneNumber(user?.uid),
+                  future: DatabaseManager().getDriverPhoneNumber(user?.uid),
                   builder: (context, snapshot) {
                     return GFListTile(
                       titleText: "Phone Number",
@@ -160,7 +160,17 @@ class ProfilePage extends StatelessWidget {
                     );
                   },
                 ),
-                const SizedBox(height: 80),
+                FutureBuilder(
+                  future: DatabaseManager().getDriverLicenseNumber(user?.uid),
+                  builder: (context, snapshot) {
+                    return GFListTile(
+                      titleText: "License Number",
+                      description: Text(snapshot.data.toString()),
+                      icon: const Icon(Icons.drive_eta_rounded),
+                    );
+                  },
+                ),
+                const SizedBox(height: 40),
                 Center(
                   child: GFButton(
                       shape: GFButtonShape.pills,
